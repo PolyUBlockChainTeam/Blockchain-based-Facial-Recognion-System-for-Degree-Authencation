@@ -1,0 +1,24 @@
+name: deepface_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7
+  - requests>=2.27.1
+  - numpy>=1.14.0
+  - pandas>=0.23.4
+  - tqdm>=4.30.0
+  - pillow>=5.2.0
+  - opencv>=4.5.5
+  - tensorflow>=1.9.0
+  - keras>=2.2.0
+  - flask>=1.1.2
+  - flask-cors>=4.0.1
+  - waitress
+  - pip
+  - pip:
+      - gdown>=3.10.1
+      - mtcnn>=0.1.0
+      - retina-face>=0.0.14
+      - fire>=0.4.0
+      - gunicorn>=20.1.0
