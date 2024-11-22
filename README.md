@@ -93,7 +93,7 @@ http://localhost:4000
 **克隆仓库**：<br>
 首次使用时，将远程仓库克隆到本地：
 ```bash
-git clone https://github.com/liu-qingyuan/COMP5521_Student-Attendance-Blockchain.git
+git clone https://github.com/PolyUBlockChainTeam/Blockchain-based-Facial-Recognion-System-for-Degree-Authencation.git
 ```
 
 **多人协作开发**<br>
