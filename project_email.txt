@@ -1,0 +1,54 @@
+Project Title:
+“Blockchain-based Facial Recognition System for Degree Authentication”
+Project Description:
+In traditional degree certification systems, verification often relies on centralized institutions, which can face issues such as inefficiency, information leakage, and the potential for fraudulent diplomas. To improve the security and transparency of degree authentication, this project proposes a Blockchain-based Facial Recognition System. By combining degree information with blockchain technology, this system ensures that the academic credentials are immutable and can be verified in real-time. Additionally, by utilizing facial recognition, the system can authenticate users, ensuring the authenticity of the degree certification process and preventing identity fraud.
+Innovations:
+Blockchain Application: The system leverages Ethereum's decentralized and immutable features to store degree-related data (e.g., graduation certificates, transcripts) on the blockchain, ensuring that degree information cannot be altered or forged.
+Facial Recognition Integration: The system uses deep learning-based facial recognition technology (such as OpenCV or DeepFace) to verify a user's identity. Once identified, the system links the user's identity with the corresponding degree data stored on the blockchain.
+Privacy Protection and Data Encryption: Facial data will not be directly stored on the blockchain. Instead, it will be encrypted before being recorded, ensuring that only authorized parties can decrypt and validate the identity. This protects the privacy of the users while maintaining the accuracy of authentication.
+Decentralized Degree Verification: Degree information is managed by blockchain nodes, where various stakeholders (such as universities and certification agencies) can verify the credentials without relying on a centralized authority, enhancing transparency and security.
+System Features:
+Degree Data Uploading: Educational institutions upload student degree information (such as graduation certificates and transcripts) to the blockchain, encrypting the data to ensure it cannot be tampered with.
+Facial Recognition-based Identity Verification: When a user requests degree verification, they are required to undergo facial recognition. Upon successful recognition, the system queries the blockchain for the corresponding degree data.
+Degree Data Querying: Users can query their own or others’ degree information through a public interface on the blockchain. However, detailed data will be restricted and only accessible to authorized users.
+Decentralized Verification Mechanism: The blockchain network consists of multiple verifying nodes, including educational institutions, government bodies, and certification agencies, ensuring the integrity and authenticity of the degree certification process.
+Smart Contracts for Automation: Smart contracts automate the degree certification process, ensuring that every verification request follows the appropriate protocol without the need for a third-party intermediary.
+Technology Stack:
+Facial Recognition: Utilize OpenCV or DeepFace for facial recognition and identity verification, supported by deep learning models in TensorFlow or PyTorch.
+Blockchain (Ethereum): The degree data and authentication records are stored on Ethereum blockchain. Smart contracts are developed and deployed using Remix IDE.
+Encryption: The system encrypts facial data using standard algorithms such as RSA or AES and stores only the encrypted hash on the blockchain.
+Frontend: Develop the user interface using React or Vue.js, where users can upload their data and check the verification results.
+Backend: The backend is powered by Node.js or Python Flask, managing facial recognition, blockchain interaction, and user authentication.
+System Architecture:
+Facial Recognition Module:
+Users submit a facial image via webcam.
+A deep learning model processes the image to perform identity verification.
+Once verified, the system retrieves the user's degree data stored on the blockchain.
+Blockchain Module:
+Degree data (such as graduation certificates) is uploaded to the blockchain, with a hash value representing the encrypted data.
+When a user requests verification, the system queries the blockchain for the corresponding degree information.
+Smart contracts ensure the entire certification process is automated, secure, and transparent.
+Frontend Interface:
+Users can check their degree status, upload facial images for authentication, and view results in real-time.
+The frontend provides a clear user interface for degree verification.
+Security and Privacy:
+Data Encryption: Facial images and degree data are encrypted before storing on the blockchain. Only authorized institutions can access and decrypt the data.
+Access Control: Multiple levels of authentication are used to ensure that only authorized users, such as educational institutions and government bodies, can access full degree information.
+Use Case Scenarios:
+University Graduation Verification: Graduates can verify their degrees by undergoing facial recognition. The system then cross-references their face with degree data stored on the blockchain to confirm authenticity.
+International Degree Validation: Blockchain enables cross-border validation of degrees, ensuring that universities and employers worldwide can verify the authenticity of academic credentials easily and securely.
+Degree Certificate Anti-fraud: By using blockchain, the system ensures that degree certificates are tamper-proof, thus preventing fraudulent degrees from being issued.
+Deployment:
+Ethereum Smart Contracts: Developed and deployed using Remix IDE for creating and testing smart contracts.
+Distributed Network: The blockchain network consists of several Ethereum nodes, ensuring decentralization and resilience.
+Node Deployment: The system is designed to run on at least 10 nodes, distributed across multiple machines, ensuring redundancy and fault tolerance.
+Expected Outcomes:
+3 System Screenshots: The interface for uploading facial images, querying degree information, and viewing the blockchain-stored data.
+Source Code Link: https://github.com/PolyUBlockChainTeam/Blockchain-based-Facial-Recognion-System-for-Degree-Authencation
+Demo Video: A video demonstrating the process of facial recognition and degree authentication, showcasing the blockchain interaction.
+Team Members:
+Li Dongwei (24117496g)
+Liu Qingyuan (24052432g)
+Hui Zifan (24046598g)
+Conclusion:
+This project introduces an innovative system for degree authentication that combines the strengths of blockchain and facial recognition technologies. The use of blockchain ensures that academic credentials are secure and tamper-proof, while facial recognition adds an additional layer of user identity verification. This solution is especially useful for preventing fraud and streamlining the verification process, making it highly applicable in the education and recruitment sectors. The decentralized nature of the system also enhances transparency and trustworthiness, offering a more efficient alternative to traditional degree verification methods.
