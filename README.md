@@ -1,4 +1,4 @@
-# COMP5557 Blockchain-Based Facial Recognition System for Degree Authentication
+# COMP5567 Blockchain-Based Facial Recognition System for Degree Authentication
 
 
 **项目描述**:<br>
