@@ -42,7 +42,7 @@ struct Degree {
     string degree;              // 学位信息
     string university;          // 授予机构
     string issuedDate;          // 颁发日期
-    bytes32 faceHash;           // 人脸信息的哈希值
+    string faceEmbedding;       // 人脸特征向量编码
 }
 mapping(string => Degree) private degrees;
 ```
