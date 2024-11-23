@@ -11,7 +11,9 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname, 'css')));
 app.use(bodyParser.json());
-app.use(cors()); // 允许跨域
+app.use(cors({
+    origin: '*', // 允许所有来源
+}));
 
 // 模拟数据库
 const users = [];
