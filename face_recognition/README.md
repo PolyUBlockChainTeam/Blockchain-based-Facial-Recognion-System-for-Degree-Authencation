@@ -40,7 +40,7 @@ cd scripts
 ```
 Windows：
 ```bash
-cd ./deepface/api/src
+cd deepface_change/deepface/api/src
 python api.py
 ```
 

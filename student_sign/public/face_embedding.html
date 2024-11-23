@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Attendance Blockchain</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/wallet.css">
+    <link rel="stylesheet" href="css/face_embedding.css">
     <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
@@ -18,8 +18,9 @@
             <a href="mining.html" id="miningLink">挖矿</a>
             <a href="attendance-records.html" id="attendanceRecordsLink">出勤记录</a>
             <a href="balance.html" id="balanceLink">余额</a>
-            <a href="wallet.html" id="walletLink">连接钱包</a>
-            <button class="btnLogin-popup">Login</button>
+            <a href="face_embedding.html" id="face_embeddingLink">Face Embedding</a>
+            <a href="face_verification.html" id="face_verificationLink">Face Verify</a>
+            <button id="btnLoginPopup" class="btnLogin-popup">Login</button>
         </nav>
     </header>
 
@@ -94,33 +95,34 @@
 
 
 
-    <div class="wallet-box" id="walletBox">
-        <section class="wallet-header">
-            <h1>钱包生成器</h1>
-            <!-- 生成按钮 -->
-            <div class="wallet-inputs">
-                <input type="text" id="walletPassword" placeholder="输入钱包密码 (Wallet Password)" />
+    <div class="face_embedding-box" id="face_embeddingBox">
+        <section class="face_embedding-header">
+            <h1>人脸编码生成器</h1>
+            <!-- 上传图片按钮 -->
+            <div class="face_embedding-inputs">
+                <input type="file" id="imageUpload" accept="image/*" />
             </div>
-            <button class="wallet-gener-btn" onclick="generateWallet()">生成钱包</button>
+            <button class="face_embedding-gener-btn" onclick="uploadAndGenerateEmbedding()">生成嵌入 (Generate Embedding)</button>
         </section>
         <section class="shell">
-            <table class="wallet-table" id="walletTable" border="1">
+            <table class="face_embedding-table" id="face_embeddingTable" border="1">
                 <thead>
                     <tr>
-                        <th>公钥 (Public Key)</th>
-                        <th>私钥 (Private Key)</th>
-                        <th>操作 (Action)</th>
+                        <th>人脸置信度 (Face Confidence)</th>
+                        <th>嵌入值 (Embedding Value)</th>
                     </tr>
                 </thead>
-                <tbody id="walletBody">
-                    <!-- 钱包信息将显示在这里 -->
+                <tbody id="face_embeddingBody">
+                    <!-- 嵌入信息将显示在这里 -->
                 </tbody>
             </table>
         </section>
     </div>
+
+    
     <script src="js/cookies.js"></script>
     <script src="script.js"></script>
-    <script src="js/wallet.js"></script>
+    <script src="js/face_embedding.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
