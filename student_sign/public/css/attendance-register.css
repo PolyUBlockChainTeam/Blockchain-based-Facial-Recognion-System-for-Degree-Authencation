@@ -184,7 +184,7 @@
     width: 90%
 }
 
-#studentPrivateKey, #eventID, #walletPassword {
+#attendance-name, #attendance-degreeType, #attendance-major, #attendance-university, #attendance-graduationYear, #attendance-id {
     width: 30%; /* 增大宽度，使输入框更加显眼 */
     padding: 8px 15px; /* 内边距，使文本更易阅读 */
     border: 1px solid rgba(255, 255, 255, 0.5); /* 半透明边框 */
