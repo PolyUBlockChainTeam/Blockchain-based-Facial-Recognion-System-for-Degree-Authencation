@@ -259,6 +259,7 @@ git add <conflict_file>
 **再次提交**：
 ```bash
 git commit -m "Resolve merge conflict"
+```
 推送解决后的代码：
 ```bash
 git push origin main

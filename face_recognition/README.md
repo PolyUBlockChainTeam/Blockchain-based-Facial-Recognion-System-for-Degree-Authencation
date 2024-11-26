@@ -50,7 +50,7 @@ python api.py
 This guide demonstrates how to call the DeepFace API using `fetch` in JavaScript (for browsers) and `httpie` (a CLI tool for making HTTP requests).
 
 ---
-# Test imgs path
+# 测试图片路径 Test imgs path
 ```bash
 face_recognition/deepface_change/deepface/api/src/test_img
 ```
