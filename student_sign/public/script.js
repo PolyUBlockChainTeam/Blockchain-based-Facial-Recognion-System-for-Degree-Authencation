@@ -189,8 +189,8 @@ loginForm.addEventListener('submit', async function (e) {
                 // window.location.assign('/face_embedding.html');
             } else {
                 alert(`Your UUID is: ${userUUID}`);
-                // 根据需要刷页面
-                window.location.reload();
+                // 如果 UUID 存在，直接跳转到 face_verification.html
+                window.location.href = '/face_verification.html';
             }
 
         }

@@ -64,23 +64,30 @@ function addUser(id, password, username) {
 }
 
 // 新增函数：为用户生成并绑定 UUID
-function addUuidToUser(id) {
+function addUuidToUser(id, uuid = null) {
     const user = users.find(user => user.id === id);
+    
+    // 如果用户不存在
     if (!user) {
         return { error: 'User not found.' };
     }
 
+    // 如果用户不是学生
     if (user.role !== 'student') {
         return { error: 'Only students can have a UUID.' };
     }
 
+    // 如果用户已经存在 UUID，则返回现有 UUID
     if (user.uuid) {
         return { message: 'UUID already exists for this user.', uuid: user.uuid };
     }
 
-    // 为学生生成新 UUID 并存储
-    user.uuid = randomUUID();
-    return { message: 'UUID generated successfully!', uuid: user.uuid };
+    // 如果传入了 UUID 则使用传入 UUID，否则生成新 UUID
+    user.uuid = uuid || randomUUID(); // 自动生成 UUID（如果 uuid 参数为空）
+
+    console.log("user:",user);
+
+    return { message: 'UUID assigned successfully!', uuid: user.uuid };
 }
 
 // 新增函数：通过 ID 获取 UUID
@@ -217,12 +224,35 @@ app.get('/users/:id/keys', (req, res) => {
 
 // 新增路由：为用户生成 UUID（只允许学生）
 app.post('/users/:id/uuid', (req, res) => {
-    const result = addUuidToUser(req.params.id);
-    if (result.error) {
-        res.status(400).send(result);
-    } else {
-        res.status(201).send(result);
+    const userId = req.params.id;
+    const { uuid } = req.body; // 从请求体中提取 `uuid` 参数
+
+    // 查找用户
+    const user = users.find(user => user.id === userId);
+    if (!user) {
+        return res.status(404).send({ error: 'User not found.' });
     }
+
+    // 检查是否为学生角色
+    if (user.role !== 'student') {
+        return res.status(400).send({ error: 'Only students can have a UUID.' });
+    }
+
+    // 如果用户已有 UUID，直接返回
+    if (user.uuid) {
+        return res.status(200).send({
+            message: 'UUID already exists for this user.',
+            uuid: user.uuid,
+        });
+    }
+
+    // 使用传入的 UUID（如果有），或者生成新的随机 UUID
+    user.uuid = uuid || randomUUID();
+
+    res.status(201).send({
+        message: 'UUID assigned successfully!',
+        uuid: user.uuid,
+    });
 });
 
 // 新增路由：查询用户的 UUID

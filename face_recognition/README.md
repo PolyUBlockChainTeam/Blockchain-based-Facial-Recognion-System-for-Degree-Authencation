@@ -40,7 +40,7 @@ cd scripts
 ```
 Windows：
 ```bash
-cd deepface_change/deepface/api/src
+cd face_recognition/deepface_change/deepface/api/src
 python api.py
 ```
 
@@ -50,7 +50,11 @@ python api.py
 This guide demonstrates how to call the DeepFace API using `fetch` in JavaScript (for browsers) and `httpie` (a CLI tool for making HTTP requests).
 
 ---
-
+# Test imgs path
+```bash
+face_recognition/deepface_change/deepface/api/src/test_img
+```
+---
 ## Endpoints
 
 - `/represent` - Generate embeddings for an image.
