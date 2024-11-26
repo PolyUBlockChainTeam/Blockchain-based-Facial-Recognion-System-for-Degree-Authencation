@@ -142,10 +142,15 @@ def verify(
         if isinstance(img_path, list):
             # given image is already pre-calculated embedding
             if not all(isinstance(dim, float) for dim in img_path):
-                raise ValueError(
-                    f"When passing img{index}_path as a list,"
-                    " ensure that all its items are of type float."
-                )
+                # print(f"img{index}_path type: {type(img_path)}, content: {img_path}")
+                # print(f"img{index}_path element types: {[type(x) for x in img_path]}")
+                # 将所有元素统一转换为 float
+                img_path = [float(dim) for dim in img_path]
+                if not all(isinstance(dim, float) for dim in img_path):
+                    raise ValueError(
+                        f"When passing img{index}_path as a list,"
+                        " ensure that all its items are of type float."
+                    )
 
             if silent is False:
                 logger.warn(

@@ -1,5 +1,11 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOMContentLoaded');  // 调试信息
+    const user = getUserFromCookies();
+    const attendanceLink = document.getElementById("attendanceLink");
+    const attendanceRecordsLink = document.getElementById("attendanceRecordsLink");
+    const faceEmbeddingLink = document.getElementById("face_embeddingLink");
+    const faceVerificationLink = document.getElementById("face_verificationLink");
+    
 
     const wrapper = document.querySelector('.wrapper');
     const loginLink = document.querySelector('.login-link');
@@ -9,14 +15,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 登录状态标志
     let isLoggedIn = checkLoginStatus();
-    console.log('isLoggedIn',isLoggedIn);  // 调试信息
+    // console.log('isLoggedIn',isLoggedIn);  // 调试信息
     if (!isLoggedIn) {
         // 用户未登录时
         btnLoginPopup.textContent = 'Login';  // 修改按钮为“Login”
+        // 用户未登录时只显示 Home 和 Login
+        hideLinks([attendanceLink, attendanceRecordsLink, faceVerificationLink]);
+        // showLinks([faceEmbeddingLink]);
     } else {
         // 用户已登录时
         btnLoginPopup.textContent = 'Logout';  // 修改按钮为“Logout”
-        console.log('end:');
+        // console.log('end:');
+        // 检查是否有 UUID
+        const userUUID = await checkUserUUID(user.userId);
+        if (!userUUID) {
+            // 没有 UUID，显示 Face Embedding 并隐藏 Face Verify
+            hideLinks([faceVerificationLink]);
+            showLinks([faceEmbeddingLink]);
+            alert("Please complete Face Embedding to get your UUID.");
+            window.location.href = "/face_embedding.html";
+        } else {
+            // 有 UUID，显示 Face Verify
+            showLinks([faceVerificationLink]);
+            hideLinks([faceEmbeddingLink]);
+
+            // 检查是否完成了 Face Verify（从 Cookie 中读取）
+            const isFaceVerified = getFaceVerificationStatus(user.userId);
+            if (!isFaceVerified) {
+                alert("Please complete Face Verify.");
+            }
+        }
     }
 
     // 注册链接点击事件
@@ -35,18 +63,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isLoggedIn) {
             // 用户未登录时，处理登录操作
-            console.log('Login button clicked');  // 调试信息
+            // console.log('Login button clicked');  // 调试信息
             wrapper.classList.add('active-login');  // 显示登录表单
         } else {
             // 用户已登录时，处理退出操作
-            console.log('Logout button clicked');  // 调试信息
+            // console.log('Logout button clicked');  // 调试信息
             deleteCookie('userId')
             deleteCookie('username')
             isLoggedIn = false;  // 更新登录状态
             btnLoginPopup.textContent = 'Login';  // 修改按钮为“Login”
-            console.log('User logged out successfully');
-            // 刷新页面
-            window.location.reload();
+            // console.log('User logged out successfully');
+            // 跳转到 index.html
+            window.location.href = '/index.html';
         }
     });
 
@@ -201,3 +229,11 @@ loginForm.addEventListener('submit', async function (e) {
     });
 });
 
+// 工具函数：显示和隐藏链接
+function hideLinks(links) {
+    links.forEach(link => link.style.display = "none");
+}
+
+function showLinks(links) {
+    links.forEach(link => link.style.display = "");
+}

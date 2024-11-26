@@ -1,79 +1,83 @@
-// 签到操作函数
-async function createAttendance() {
-    const user = getUserFromCookies();
-    const userId = user.userId;
-    
-    if (!userId) return;
-    // 老师不能生成
-    if (getUserRole(userId)=='teacher') {
-        alert("You are not student!")
-        return;
+// 你的合约地址和 ABI
+const contractAddress = '0xB581C9264f59BF0289fA76D61B2D0746dCE3C30D';
+const contractABI = [
+    {
+        "inputs": [
+            {"internalType": "bytes32", "name": "studentID", "type": "bytes32"},
+            {"internalType": "string", "name": "name", "type": "string"},
+            {"internalType": "string", "name": "degreeType", "type": "string"},
+            {"internalType": "string", "name": "major", "type": "string"},
+            {"internalType": "string", "name": "university", "type": "string"},
+            {"internalType": "uint256", "name": "year", "type": "uint256"}
+        ],
+        "name": "addDegree",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {"internalType": "bytes32", "name": "studentID", "type": "bytes32"}
+        ],
+        "name": "getDegree",
+        "outputs": [
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "uint256", "name": "", "type": "uint256"}
+        ],
+        "stateMutability": "view",
+        "type": "function"
     }
+];
 
-    const studentID = userId
+let web3;
+let contract;
+let senderAccount;
 
-    // 获取表单中的值
-    const studentPrivateKey = document.getElementById('studentPrivateKey').value;
-    const eventID = document.getElementById('eventID').value;
-    const walletPassword = document.getElementById('walletPassword').value;
+async function init() {
+    // 检查用户的 Ethereum 提供者
+    if (typeof window.ethereum !== 'undefined') {
+        web3 = new Web3(window.ethereum);
+        // 请求用户授权
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        senderAccount = accounts[0];
 
-    // 校验输入内容
-    if (!studentPrivateKey || !eventID || !walletPassword) {
-        alert('请填写所有必填项！');
-        return;
+        // 实例化合约
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+    } else {
+        console.error("请安装 MetaMask 或其他以太坊钱包");
+    }
+}
+
+async function addDegree() {
+    const studentIDInput = uuid.v4(); // 学生ID为UUID
+    const studentID = web3.utils.sha3(studentIDInput); // 计算学生ID的哈希
+    // 获取其他参数
+    const name = document.getElementById("attendance-name").value.trim();
+    const degreeType = document.getElementById("attendance-degreeType").value.trim();
+    const major = document.getElementById("attendance-major").value.trim();
+    const university = document.getElementById("attendance-university").value.trim();
+    const yearValue = document.getElementById("attendance-graduationYear").value.trim();
+    const year = parseInt(yearValue, 10); // 将年份转换为整数
+
+    // 检查输入的有效性
+    if (!studentIDInput || !name || !degreeType || !major || !university || isNaN(year)) {
+        console.error("请确保所有输入框都填写正确");
+        alert("请确保所有输入框都填写正确");
+        return; // 停止执行
     }
 
     try {
-        // 调用后端 API 签到
-        const response = await fetch(`http://localhost:3001/student/wallets/${studentID}/certificates`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'password': walletPassword, // 从表单获取密码
-            },
-            body: JSON.stringify({
-                eventid: eventID, // 课程 ID
-                type: 'sign', // 签到类型
-                secretKey: studentPrivateKey, // 钱包密钥
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log('签到成功:', result);
-        alert('签到成功！');
-
-        // 可选择在前端更新签到表格内容
-        // 更新签到表格的示例代码
-        updateAttendanceTable(result);
+        // 调用智能合约的函数
+        await contract.methods.addDegree(studentID, name, degreeType, major, university, year).send({ from: senderAccount });
+        console.log("学位信息已添加，学号为："+studentID);
+        alert("以下是您的学号(同时已打印到控制台),请牢记:"+studentID);
     } catch (error) {
-        console.error('签到失败:', error);
-        alert('签到失败，请稍后再试。');
+        console.error("添加学位信息时出错:", error);
     }
 }
 
-// 更新签到表格的函数（根据返回的数据更新签到记录）
-function updateAttendanceTable(data) {
-    const tableBody = document.getElementById('attendance-registerBody');
-
-    // 创建新的表格行
-    const newRow = document.createElement('tr');
-
-    // 将返回的数据填充到表格行中
-    newRow.innerHTML = `
-        <td>${data.id}</td>  <!-- 签到请求的唯一标识符 -->
-        <td>${data.hash}</td>  <!-- 签到的哈希值 -->
-        <td>${data.studentid}</td>  <!-- 学生 ID -->
-        <td>${data.eventid}</td>  <!-- 课程 ID -->
-        <td>${data.type}</td>  <!-- 签到类型 -->
-        <td>${new Date(data.timestamp * 1000).toLocaleString()}</td> <!-- 转换时间戳为可读日期 -->
-        <td>${data.signature}</td>  <!-- 签名 -->
-    `;
-    
-    // 将新行添加到表格主体
-    tableBody.appendChild(newRow);
-}
+// 初始化合约交互
+init();

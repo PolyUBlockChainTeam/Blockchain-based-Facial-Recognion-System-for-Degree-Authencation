@@ -67,3 +67,12 @@ function checkLoginStatus() {
         return false;
     }
 }
+// 获取 Face Verify 状态（通过 Cookie）
+function getFaceVerificationStatus(userId) {
+    const faceVerified = getCookie(`faceVerified_${userId}`);
+    return faceVerified === "true"; // 返回 true 或 false
+}
+// 设置 Face Verify 状态（通过 Cookie）
+function setFaceVerificationStatus(userId, isVerified) {
+    setCookie(`faceVerified_${userId}`, isVerified ? "true" : "false", 0.5); // 存储 0.5 天
+}

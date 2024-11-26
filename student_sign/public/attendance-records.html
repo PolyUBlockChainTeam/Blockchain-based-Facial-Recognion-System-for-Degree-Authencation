@@ -14,13 +14,11 @@
         <h2 class="logo">Logo</h2>
         <nav class="navigation">
             <a href="index.html">Home</a>
-            <a href="attendance-register.html" id="attendanceLink">学历上传与验证</a>
-            <a href="mining.html" id="miningLink">挖矿</a>
-            <a href="attendance-records.html" id="attendanceRecordsLink">出勤记录</a>
-            <a href="balance.html" id="balanceLink">余额</a>
-            <a href="face_embedding.html" id="face_embeddingLink">Face Embedding</a>
-            <a href="face_verification.html" id="face_verificationLink">Face Verify</a>
-            <button id="btnLoginPopup" class="btnLogin-popup">Login</button>
+            <!-- <a href="attendance-register.html" id="attendanceLink">学历上传</a> -->
+            <a href="attendance-records.html" id="attendanceRecordsLink">学历查询</a>
+            <!-- <a href="face_embedding.html" id="face_embeddingLink">Face Embedding</a>
+            <a href="face_verification.html" id="face_verificationLink">Face Verify</a> -->
+            <button class="btnLogin-popup">Login</button>
         </nav>
     </header>
 
@@ -34,10 +32,10 @@
             <form action="#" id="login-form">
                 <div class="input-box">
                     <span class="icon">
-                        <ion-icon name="id-card"></ion-icon> <!-- 修改图标 -->
+                        <ion-icon name="id-card"></ion-icon>
                     </span>
                     <input type="text" id="login-id" required placeholder=" ">
-                    <label for="login-id">StudentID/TeachID</label> <!-- 修改标签 -->
+                    <label for="login-id">StudentID/TeachID</label>
                 </div>
                 <div class="input-box">
                     <span class="icon">
@@ -69,10 +67,10 @@
                 </div>
                 <div class="input-box">
                     <span class="icon">
-                        <ion-icon name="id-card"></ion-icon> <!-- 修改图标 -->
+                        <ion-icon name="id-card"></ion-icon>
                     </span>
                     <input type="text" id="register-id" required placeholder=" ">
-                    <label for="register-id">StudentID/TeachID</label> <!-- 修改标签 -->
+                    <label for="register-id">StudentID/TeachID</label>
                 </div>
                 <div class="input-box">
                     <span class="icon">
@@ -92,64 +90,42 @@
         </div>        
     </div>
 
-
-
-
-    <div class="attendance-records-box">
+    <div class="attendance-records-box" id="attendance-recordsBox">
         <section class="attendance-records-header">
-            <h1>出勤记录查询1</h1>
-            <!-- 输入学生ID、周次查询信息 -->
-            <input type="text" id="attendance-studentIdInput" placeholder="请输入学生ID" />
-            <input type="number" id="attendance-weekNumInput" placeholder="请输入 weekNum" min="1" max="13" />
-            <button class="attendance-records-query-btn" onclick="queryAttendance()">出勤查询</button>
+            <h1>学历查询</h1>
+            
+            <div class="attendance-records-inputs">
+                <input type="text" id="attendance-id" placeholder="输入学号" />
+            </div>
+            
+            <button class="attendance-records-btn" onclick="queryDegree()">查询</button>
         </section>
+        
         <section class="shell">
-            <table class="attendance-records-table" border="1">
+            <table class="attendance-records-table" id="attendance-recordsTable" border="1">
                 <thead>
                     <tr>
-                        <th>学生ID (Student ID)</th>
-                        <th>课程 (Event ID)</th>
-                        <th>时间戳 (Timestamp)</th>
-                        <th>哈希值 (Hash)</th>
-                        <th>证书ID (Certificate ID)</th>
-                        <th>签名 (Signature)</th>
+                        <th>学号</th>
+                        <th>学位类型</th>
+                        <th>专业</th>
+                        <th>毕业院校</th>
+                        <th>毕业年份</th>
                     </tr>
                 </thead>
                 <tbody id="attendance-recordsBody">
-                    <!-- 出勤记录将显示在这里 -->
-                </tbody>
-            </table>
-        </section>
-        <section class="attendance-records-header">
-            <h1>出勤记录查询2</h1>
-            <!-- 输入课程ID查询信息 -->
-            <input type="text" id="attendance-eventIdInput" placeholder="请输入 eventId"/>
-            <button class="attendance-records-query-btn" onclick="queryAttendance2()">出勤查询</button>
-        </section>
-        <section class="shell">
-            <table class="attendance-records-table" border="1">
-                <thead>
-                    <tr>
-                        <th>学生ID (Student ID)</th>
-                        <th>课程 (Event ID)</th>
-                        <th>时间戳 (Timestamp)</th>
-                        <th>哈希值 (Hash)</th>
-                        <th>证书ID (Certificate ID)</th>
-                        <th>签名 (Signature)</th>
-                    </tr>
-                </thead>
-                <tbody id="attendance-recordsBody2">
-                    <!-- 出勤记录将显示在这里 -->
+                    <!-- 签到记录将显示在这里 -->
                 </tbody>
             </table>
         </section>
     </div>
-
+    
     <script src="js/cookies.js"></script>
     <script src="js/uuid.js"></script>
     <script src="script.js"></script>
-    <script src="js/attendance-records.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+    <script src="js/attendance-records.js"></script>
 </body>
 </html>

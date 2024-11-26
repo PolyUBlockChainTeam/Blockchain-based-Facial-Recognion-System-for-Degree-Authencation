@@ -143,34 +143,34 @@
 
 /* 定义每一列的宽度比例 */
 
-.attendance-register-table th:nth-child(1), 
+/* 姓名 (Name) */
+.attendance-register-table th:nth-child(1),
 .attendance-register-table td:nth-child(1) {
-    width: 15%;  /* id (签到请求的唯一标识符) */
+    width: 20%; /* 适当宽度确保姓名完整显示 */
 }
 
-.attendance-register-table th:nth-child(2),  
+/* 学位类型 (Degree Type) */
+.attendance-register-table th:nth-child(2),
 .attendance-register-table td:nth-child(2) {
-    width: 20%;  /* hash (签到的哈希值) */
+    width: 15%; /* 通常短文本，例如 Bachelor's 或 Master's */
 }
 
-.attendance-register-table th:nth-child(3), 
+/* 专业 (Major) */
+.attendance-register-table th:nth-child(3),
 .attendance-register-table td:nth-child(3) {
-    width: 15%;  /* studentid (学生 ID) */
+    width: 20%; /* 可能包含较长名称的专业 */
 }
 
-.attendance-register-table th:nth-child(4), 
+/* 大学 (University) */
+.attendance-register-table th:nth-child(4),
 .attendance-register-table td:nth-child(4) {
-    width: 15%;  /* eventid (课程 ID) */
+    width: 30%; /* 大学名称一般较长，分配更宽比例 */
 }
 
-.attendance-register-table th:nth-child(5), 
+/* 毕业年份 (Graduation Year) */
+.attendance-register-table th:nth-child(5),
 .attendance-register-table td:nth-child(5) {
-    width: 15%;  /* type (签到类型) */
-}
-
-.attendance-register-table th:nth-child(6), 
-.attendance-register-table td:nth-child(6) {
-    width: 15%;  /* timestamp (时间戳) */
+    width: 15%; /* 短文本，如四位年份 */
 }
 
 
@@ -184,7 +184,7 @@
     width: 90%
 }
 
-#attendance-name, #attendance-degreeType, #attendance-major, #attendance-university, #attendance-graduationYear, #attendance-id {
+#attendance-name, #attendance-degreeType, #attendance-major, #attendance-university, #attendance-graduationYear {
     width: 30%; /* 增大宽度，使输入框更加显眼 */
     padding: 8px 15px; /* 内边距，使文本更易阅读 */
     border: 1px solid rgba(255, 255, 255, 0.5); /* 半透明边框 */
@@ -199,7 +199,7 @@
 }
 
 /* 聚焦效果 */
-#studentPrivateKey:focus, #eventID:focus, #walletPassword:focus {
+#attendance-name:focus, #attendance-degreeType:focus, #attendance-major:focus, #attendance-university:focus, #attendance-graduationYear:focus {
     background: rgba(0, 123, 255, 0.3); /* 聚焦时背景色 */
     border-color: rgba(0, 123, 255, 1); /* 聚焦时边框颜色 */
     transform: scale(1.02); /* 聚焦时稍微放大 */

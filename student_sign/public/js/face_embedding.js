@@ -48,7 +48,7 @@ async function uploadAndGenerateEmbedding() {
         if (result) {
             // console.log("result:",result);
             
-            // result.embedding 是一个固定长度为 4096 的数组 需要传入区块链
+            // !!!result.embedding 是一个固定长度为 4096 的数组 需要传入区块链!!!
             console.log("result.embedding:",result.embedding);
             // 示例：解析并调用 displayEmbedding 函数
             displayEmbedding(result?.face_confidence || 0, result?.embedding || []);
@@ -59,7 +59,8 @@ async function uploadAndGenerateEmbedding() {
             // 2. 如果传入的 uuid 不为空，则绑定该值到用户（作为用户的 UUID）。
             // 3. 如果用户已有 UUID，则不会重新生成，而是直接返回已有的 UUID。
             try {
-                const newUUID = await addUserUUID(userId, '11111111111'); // 调用生成并绑定 UUID 的函数 这里默认是'11111111111'
+                // !!!这里应该是把区块链生成的UUID传到这里!!!
+                const newUUID = await addUserUUID(userId, '11111111111'); // !!!调用生成并绑定 UUID 的函数 这里默认是'11111111111'!!!
                 if (newUUID) {
                     alert(`成功生成 Embedding，且为用户分配了 UUID：${newUUID}`);
                 } else {

@@ -1,139 +1,77 @@
-// 出勤记录查询函数
-async function queryAttendance() {
-    // 获取当前用户是否登录
-    const user = getUserFromCookies();
-
-    if (!user) {
-        alert("请先登录！");
-        return;
+// 你的合约地址和 ABI
+const contractAddress = '0xB581C9264f59BF0289fA76D61B2D0746dCE3C30D';
+const contractABI = [
+    {
+        "inputs": [
+            {"internalType": "bytes32", "name": "studentID", "type": "bytes32"},
+            {"internalType": "string", "name": "name", "type": "string"},
+            {"internalType": "string", "name": "degreeType", "type": "string"},
+            {"internalType": "string", "name": "major", "type": "string"},
+            {"internalType": "string", "name": "university", "type": "string"},
+            {"internalType": "uint256", "name": "year", "type": "uint256"}
+        ],
+        "name": "addDegree",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {"internalType": "bytes32", "name": "studentID", "type": "bytes32"}
+        ],
+        "name": "getDegree",
+        "outputs": [
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "string", "name": "", "type": "string"},
+            {"internalType": "uint256", "name": "", "type": "uint256"}
+        ],
+        "stateMutability": "view",
+        "type": "function"
     }
+];
 
-    // 获取输入的学生ID和周次
-    const studentId = document.getElementById('attendance-studentIdInput').value.trim();
-    const weekNum = parseInt(document.getElementById('attendance-weekNumInput').value, 10);
+let web3;
+let contract;
+let senderAccount;
 
-    if (!studentId) {
-        alert("请输入学生ID！");
-        return;
+async function init() {
+    // 检查用户的 Ethereum 提供者
+    if (typeof window.ethereum !== 'undefined') {
+        web3 = new Web3(window.ethereum);
+        // 请求用户授权
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        senderAccount = accounts[0];
+
+        // 实例化合约
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+    } else {
+        console.error("请安装 MetaMask 或其他以太坊钱包");
     }
+}
 
-    if (isNaN(weekNum) || weekNum < 1 || weekNum > 13) {
-        alert("请输入有效的周次 (1-13)！");
-        return;
-    }
+async function queryDegree() {
+    const studentID = document.getElementById("attendance-id").value; // 从输入框获取学生ID
+    const degreeInfoBody = document.getElementById("attendance-registerBody");
+    degreeInfoBody.innerHTML = ""; // 清空之前的查询结果
 
     try {
-        // 调用后端 API 查询出勤记录
-        const response = await fetch(
-            `http://localhost:3001/teacher/queryWeeks?studentid=${studentId}&weekNum=${weekNum}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                },
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(`查询失败: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log("查询结果:", result);
-
-        // 更新出勤表格
-        updateAttendanceRecordsTable(studentId, result);
+        const degreeInfo = await contract.methods.getDegree(studentID).call();
+        degreeInfoBody.innerHTML = `
+            <tr>
+                <td>${degreeInfo[0]}</td>
+                <td>${degreeInfo[1]}</td>
+                <td>${degreeInfo[2]}</td>
+                <td>${degreeInfo[3]}</td>
+                <td>${degreeInfo[4].toString()}</td>
+            </tr>
+        `;
     } catch (error) {
-        console.error("查询失败:", error);
-        alert("查询失败，请稍后再试。");
+        console.error("查询学位信息时出错:", error);
+        degreeInfoBody.innerHTML = "<tr><td colspan='5'>查询失败,请检查学生ID或合约状态。</td></tr>";
     }
 }
 
-// 更新出勤记录表格
-function updateAttendanceRecordsTable(studentId, data) {
-    const tableBody = document.getElementById('attendance-recordsBody');
-    tableBody.innerHTML = ''; // 清空表格内容
-
-    // 检查是否有记录
-    if (data?.certifications?.length > 0) {
-        data.certifications.forEach(cert => {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${studentId}</td> <!-- 学生ID -->
-                <td>${cert.eventid}</td> <!-- 课程 -->
-                <td>${new Date(cert.timestamp * 1000).toLocaleString()}</td> <!-- 时间戳 -->
-                <td>${cert.hash}</td> <!-- 哈希值 -->
-                <td>${cert.id}</td> <!-- 证书ID -->
-                <td>${cert.signature}</td> <!-- 签名 -->
-            `;
-            tableBody.appendChild(newRow);
-        });
-    } else {
-        const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = `<td colspan="6" style="text-align: center;">没有找到记录</td>`;
-        tableBody.appendChild(emptyRow);
-    }
-}
-
-// 出勤记录查询函数2
-async function queryAttendance2() {
-    // 获取输入框中的课程 ID（eventId）
-    const eventId = document.getElementById('attendance-eventIdInput').value.trim();
-
-    if (!eventId) {
-        alert("请输入课程 ID！");
-        return;
-    }
-
-    try {
-        // 调用后端 API 查询课程出勤记录
-        const response = await fetch(
-            `http://localhost:3001/teacher/queryClass?classid=${eventId}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                },
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(`查询失败: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log("查询结果:", result);
-
-        // 更新出勤表格
-        updateAttendanceRecordsTable2(eventId, result);
-    } catch (error) {
-        console.error("查询失败:", error);
-        alert("查询失败，请稍后再试。");
-    }
-}
-
-// 更新出勤记录表格
-function updateAttendanceRecordsTable2(eventId, data) {
-    const tableBody = document.getElementById('attendance-recordsBody2');
-    tableBody.innerHTML = ''; // 清空表格内容
-
-    // 检查是否有记录
-    if (data?.certificates?.length > 0) {
-        data.certificates.forEach(cert => {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${cert.studentid}</td> <!-- 学生ID -->
-                <td>${eventId}</td> <!-- 课程 -->
-                <td>${new Date(cert.timestamp * 1000).toLocaleString()}</td> <!-- 时间戳 -->
-                <td>${cert.hash}</td> <!-- 哈希值 -->
-                <td>${cert.id}</td> <!-- 证书ID -->
-                <td>${cert.signature}</td> <!-- 签名 -->
-            `;
-            tableBody.appendChild(newRow);
-        });
-    } else {
-        const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = `<td colspan="6" style="text-align: center;">没有找到记录</td>`;
-        tableBody.appendChild(emptyRow);
-    }
-}
+// 初始化合约交互
+init();
