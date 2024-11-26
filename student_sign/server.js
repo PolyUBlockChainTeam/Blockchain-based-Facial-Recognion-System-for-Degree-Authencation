@@ -5,10 +5,12 @@ const cors = require('cors');
 const path = require('path');  // This line is added to require the path module
 
 const app = express();
+const { randomUUID } = require('crypto'); // 用 crypto 的随机 UUID 功能
 
 // 设置静态文件目录
 // 提供 /js 和 /css 文件夹中的静态文件
 app.use(express.static(path.join(__dirname, 'public')));
+console.log('Serving static files from:', path.join(__dirname, 'public'));
 // app.use(express.static(path.join(__dirname, 'css')));
 app.use(bodyParser.json());
 app.use(cors({
@@ -28,13 +30,12 @@ function verifyPassword(storedPassword, inputPassword) {
     return storedPassword === hashPassword(inputPassword);
 }
 
-// 添加新用户
+// 修改 addUser 函数，初始情况下 uuid 为空
 function addUser(id, password, username) {
     if (!id || !password || !username) {
         return { error: 'ID, password, and username are required!' };
     }
 
-    // 根据ID的后缀来判断角色
     let role = '';
     if (id.endsWith('g')) {
         role = 'student';
@@ -55,11 +56,42 @@ function addUser(id, password, username) {
         password: hashPassword(password),
         role,
         keys: [],
+        uuid: null, // 初始无 uuid
     };
 
     users.push(newUser);
     return { message: 'User created successfully!', user: { id, role, username } };
 }
+
+// 新增函数：为用户生成并绑定 UUID
+function addUuidToUser(id) {
+    const user = users.find(user => user.id === id);
+    if (!user) {
+        return { error: 'User not found.' };
+    }
+
+    if (user.role !== 'student') {
+        return { error: 'Only students can have a UUID.' };
+    }
+
+    if (user.uuid) {
+        return { message: 'UUID already exists for this user.', uuid: user.uuid };
+    }
+
+    // 为学生生成新 UUID 并存储
+    user.uuid = randomUUID();
+    return { message: 'UUID generated successfully!', uuid: user.uuid };
+}
+
+// 新增函数：通过 ID 获取 UUID
+function getUuidByUserId(id) {
+    const user = users.find(user => user.id === id);
+    if (!user) {
+        return { error: 'User not found.' };
+    }
+    return user.uuid || null;
+}
+
 
 // 登录函数：验证用户ID和密码
 function login(id, password) {
@@ -183,18 +215,31 @@ app.get('/users/:id/keys', (req, res) => {
     }
 });
 
+// 新增路由：为用户生成 UUID（只允许学生）
+app.post('/users/:id/uuid', (req, res) => {
+    const result = addUuidToUser(req.params.id);
+    if (result.error) {
+        res.status(400).send(result);
+    } else {
+        res.status(201).send(result);
+    }
+});
+
+// 新增路由：查询用户的 UUID
+app.get('/users/:id/uuid', (req, res) => {
+    const user = users.find(user => user.id === req.params.id);
+
+    if (!user) {
+        // 用户不存在，返回 404 状态码
+        res.status(404).send({ error: 'User not found.' });
+    } else {
+        // 用户存在，无论 uuid 是否为空，都返回 200
+        res.status(200).send({ uuid: user.uuid });
+    }
+});
+
 // 启动服务器
 const PORT = 4000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-// 导出函数用于外部调用
-module.exports = {
-    addUser,
-    getAllUsers,
-    getUserById,
-    addKeyPairToUser,
-    getKeysByUserId,
-    login
-};

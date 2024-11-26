@@ -130,7 +130,7 @@ const loginPasswordInput = document.getElementById('login-password');
 const rememberCheckbox = document.getElementById('login-remember');
 
 // 监听表单提交
-loginForm.addEventListener('submit', function (e) {
+loginForm.addEventListener('submit', async function (e) {
     e.preventDefault(); // 防止默认表单提交行为
 
     // 获取输入的数据
@@ -160,7 +160,7 @@ loginForm.addEventListener('submit', function (e) {
         body: JSON.stringify(loginData),
     })
     .then(response => response.json())
-    .then(data => {
+    .then(async data => { // 嵌套异步，因为接下来需要检查 UUID
         if (data.error) {
             alert(data.error); // 显示错误信息
         } else {
@@ -168,6 +168,7 @@ loginForm.addEventListener('submit', function (e) {
             // 获取返回的 ID 和 username
             const userId = data.data.id || 'Unknown ID';
             const username = data.data.username || 'Unknown User';
+            let userUUID = null;
 
             // 保存用户信息到 Cookies
             setUserCookies(userId, username);
@@ -175,12 +176,23 @@ loginForm.addEventListener('submit', function (e) {
 
             // 显示欢迎信息
             alert(`Login successful! Welcome, ${username} (ID: ${userId})`);
-            
-            // 可以根据需要重定向或清空表单
-            loginForm.reset();
 
-            // 刷新页面
-            window.location.reload();
+            // 重置表单
+            loginForm.reset();
+            
+            // 检查用户是否有 UUID
+            userUUID = await checkUserUUID(userId); // 使用前面的检查函数
+            if (!userUUID) {
+                alert('You do not have a UUID yet.');
+                // 如果 UUID 为 null，直接跳转到 face_embedding.html
+                window.location.href = '/face_embedding.html';
+                // window.location.assign('/face_embedding.html');
+            } else {
+                alert(`Your UUID is: ${userUUID}`);
+                // 根据需要刷页面
+                window.location.reload();
+            }
+
         }
     })
     .catch(error => {
@@ -188,3 +200,4 @@ loginForm.addEventListener('submit', function (e) {
         alert('An error occurred during login.');
     });
 });
+
