@@ -1,3 +1,7 @@
+// 隐藏标签链接
+const faceVerificationLink = document.getElementById("face_verificationLink");
+hideLinks([faceVerificationLink]);
+
 // 你的合约地址和 ABI
 const contractAddress = '0xB581C9264f59BF0289fA76D61B2D0746dCE3C30D';
 const contractABI = [

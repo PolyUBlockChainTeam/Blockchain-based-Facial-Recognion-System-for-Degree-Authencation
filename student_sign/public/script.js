@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 用户未登录时
         btnLoginPopup.textContent = 'Login';  // 修改按钮为“Login”
         // 用户未登录时只显示 Home 和 Login
-        hideLinks([attendanceLink, attendanceRecordsLink, faceVerificationLink]);
+        hideLinks([attendanceLink, attendanceRecordsLink, faceVerificationLink, faceEmbeddingLink]);
         // showLinks([faceEmbeddingLink]);
     } else {
         // 用户已登录时
@@ -29,20 +29,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 检查是否有 UUID
         const userUUID = await checkUserUUID(user.userId);
         if (!userUUID) {
+            console.log('no UUID');  // 调试信息
             // 没有 UUID，显示 Face Embedding 并隐藏 Face Verify
-            hideLinks([faceVerificationLink]);
+            hideLinks([attendanceLink, faceVerificationLink]);
             showLinks([faceEmbeddingLink]);
             alert("Please complete Face Embedding to get your UUID.");
-            window.location.href = "/face_embedding.html";
+            // window.location.href = "/face_embedding.html";
         } else {
-            // 有 UUID，显示 Face Verify
-            showLinks([faceVerificationLink]);
+            // 有 UUID
             hideLinks([faceEmbeddingLink]);
 
             // 检查是否完成了 Face Verify（从 Cookie 中读取）
             const isFaceVerified = getFaceVerificationStatus(user.userId);
+            console.log("isFaceVerified:", isFaceVerified);
             if (!isFaceVerified) {
+                // 没完成 Face Verify 显示 Face Verify
+                showLinks([faceVerificationLink]);
                 alert("Please complete Face Verify.");
+            }
+            else {
+                // 完成了 Face Verify 隐藏 Face Verify
+                hideLinks([faceVerificationLink]);
             }
         }
     }
@@ -218,7 +225,8 @@ loginForm.addEventListener('submit', async function (e) {
             } else {
                 alert(`Your UUID is: ${userUUID}`);
                 // 如果 UUID 存在，直接跳转到 face_verification.html
-                window.location.href = '/face_verification.html';
+                // window.location.href = '/face_verification.html';
+                window.location.href = '/index.html';
             }
 
         }

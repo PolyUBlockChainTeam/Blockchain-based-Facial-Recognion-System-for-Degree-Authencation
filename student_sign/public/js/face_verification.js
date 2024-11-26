@@ -4096,7 +4096,8 @@ let test_embedding = [0,
     0
 ];
 
-
+const attendanceLink = document.getElementById("attendanceLink");
+hideLinks([attendanceLink]);
 
 async function uploadAndVerify() {
     const imageInput = document.getElementById("imageUpload");
@@ -4192,6 +4193,8 @@ async function displayVerificationResult(data) {
             const userUUID = await checkUserUUID(userId);
             if (userUUID) {
                 alert(`验证通过！您的 UUID 是: ${userUUID}`);
+                showLinks([attendanceLink]);
+                setFaceVerificationStatus(userId, verified)
             } else {
                 alert("验证通过，但未能找到您的 UUID。");
             }

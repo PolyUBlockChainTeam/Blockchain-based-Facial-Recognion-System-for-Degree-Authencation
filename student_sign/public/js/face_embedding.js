@@ -63,6 +63,10 @@ async function uploadAndGenerateEmbedding() {
                 const newUUID = await addUserUUID(userId, '11111111111'); // !!!调用生成并绑定 UUID 的函数 这里默认是'11111111111'!!!
                 if (newUUID) {
                     alert(`成功生成 Embedding，且为用户分配了 UUID：${newUUID}`);
+                    const faceEmbeddingLink = document.getElementById("face_embeddingLink");
+                    const faceVerificationLink = document.getElementById("face_verificationLink");
+                    showLinks([faceVerificationLink]);
+                    hideLinks([faceEmbeddingLink]);
                 } else {
                     alert("生成 Embedding 成功，但未能为用户生成 UUID！");
                 }

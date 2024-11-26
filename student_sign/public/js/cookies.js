@@ -63,7 +63,7 @@ function checkLoginStatus() {
         // alert(`Welcome back, ${user.username} (ID: ${user.userId})`);
         return true;
     } else {
-        alert('Please log in.');
+        // alert('Please log in.');
         return false;
     }
 }
