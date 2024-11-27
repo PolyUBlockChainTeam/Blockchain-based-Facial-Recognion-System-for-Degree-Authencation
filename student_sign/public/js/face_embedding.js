@@ -112,3 +112,10 @@ function displayEmbedding(faceConfidence, embedding) {
         face_embeddingBody.appendChild(row);
     });
 }
+
+// 上传文件名显示
+function updateFileName() {
+    const fileInput = document.getElementById("imageUpload");
+    const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
+    document.getElementById("fileName").textContent = fileName;
+}

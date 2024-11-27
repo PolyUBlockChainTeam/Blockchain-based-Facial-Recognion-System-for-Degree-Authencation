@@ -204,3 +204,34 @@
     border-color: rgba(0, 123, 255, 1); /* 聚焦时边框颜色 */
     transform: scale(1.02); /* 聚焦时稍微放大 */
 }
+
+/* 自定义上传按钮样式 */
+.file-upload-btn {
+    display: inline-block;
+    background-color: rgba(0, 123, 255, 0.7); /* 半透明背景 */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+/* 悬停时的按钮效果 */
+.file-upload-btn:hover {
+    background-color: rgba(0, 123, 255, 1); /* 悬停时按钮不透明 */
+}
+
+/* 隐藏默认的 input[type="file"] */
+#imageUpload {
+    display: none;
+}
+
+/* 文件名显示区域 */
+#fileName {
+    margin-left: 10px;
+    font-weight: normal;
+    font-size: 14px;
+    color: white;
+}

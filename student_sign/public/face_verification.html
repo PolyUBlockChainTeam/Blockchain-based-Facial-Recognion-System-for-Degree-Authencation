@@ -95,9 +95,12 @@
 
     <div class="face_verification-box" id="face_verificationBox">
         <section class="face_verification-header">
-            <h1>人脸验证</h1>
+            <h1>Face Verification</h1>
+            <!-- 上传图片按钮 -->
             <div class="face_verification-inputs">
-                <input type="file" id="imageUpload" accept="image/*" />
+                <label for="imageUpload" class="file-upload-btn">Choose File</label>
+                <input type="file" id="imageUpload" accept="image/*" onchange="updateFileName()" />
+                <span id="fileName">No file selected</span>
             </div>
             <button class="face_verification-gener-btn" onclick="uploadAndVerify()">验证人脸 (Verify Faces)</button>
         </section>

@@ -4203,3 +4203,9 @@ async function displayVerificationResult(data) {
         }
     }
 }
+// 上传文件名显示
+function updateFileName() {
+    const fileInput = document.getElementById("imageUpload");
+    const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "未选择文件 (No file selected)";
+    document.getElementById("fileName").textContent = fileName;
+}

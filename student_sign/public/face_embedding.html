@@ -95,10 +95,12 @@
 
     <div class="face_embedding-box" id="face_embeddingBox">
         <section class="face_embedding-header">
-            <h1>人脸编码生成器</h1>
+            <h1>Face Embedding Generator</h1>
             <!-- 上传图片按钮 -->
             <div class="face_embedding-inputs">
-                <input type="file" id="imageUpload" accept="image/*" />
+                <label for="imageUpload" class="file-upload-btn">Choose File</label>
+                <input type="file" id="imageUpload" accept="image/*" onchange="updateFileName()" />
+                <span id="fileName">No file selected</span>
             </div>
             <button class="face_embedding-gener-btn" onclick="uploadAndGenerateEmbedding()">生成嵌入 (Generate Embedding)</button>
         </section>
