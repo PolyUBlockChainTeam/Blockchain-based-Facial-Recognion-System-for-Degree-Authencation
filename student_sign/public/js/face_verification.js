@@ -4105,13 +4105,12 @@ async function uploadAndVerify() {
     const file = imageInput.files[0];
 
     if (!file) {
-        alert("请上传图片！");
+        alert("Please upload an image!");
         return;
     }
-
     // 将文件转换为 Base64 格式
     const fileBase64 = await fileToBase64(file);
-    
+        
     // 输出每个元素及其类型到控制台
     // test_embedding.forEach((item, index) => {
     //     console.log(`Index ${index}: Value = ${item}, Type = ${typeof item}`);
@@ -4132,41 +4131,41 @@ async function uploadAndVerify() {
         const response = await fetch("http://localhost:5000/verify", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json", // 设置 JSON 请求头
+                "Content-Type": "application/json", // Set JSON request header
             },
             body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
-            throw new Error("API 调用失败！");
+            throw new Error("API call failed!");
         }
 
         const data = await response.json();
         displayVerificationResult(data);
     } catch (error) {
         console.error(error);
-        alert("验证人脸时出错，请检查控制台！");
+        alert("An error occurred during face verification, please check the console!");
     }
 }
 
-// 将图片转换为 Base64 格式
+// Convert image to Base64 format
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // 不去掉 Base64 前缀
+        reader.onload = () => resolve(reader.result); // Do not remove Base64 prefix
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
 }
 
-// 更新表格显示验证结果
+// Update table to display verification result
 async function displayVerificationResult(data) {
     const face_verificationBody = document.getElementById("face_verificationBody");
-    face_verificationBody.innerHTML = ""; // 清空表格内容
+    face_verificationBody.innerHTML = ""; // Clear table content
 
     const { verified, distance, time } = data;
-    const result = verified ? "通过验证" : "验证失败";
-    const similarity = (1 - distance).toFixed(2); // 将距离转换为相似度
+    const result = verified ? "Verification Passed" : "Verification Failed";
+    const similarity = (1 - distance).toFixed(2); // Convert distance to similarity
 
     const row = document.createElement("tr");
 
@@ -4177,35 +4176,36 @@ async function displayVerificationResult(data) {
     similarityCell.textContent = similarity;
 
     const timeCell = document.createElement("td");
-    timeCell.textContent = `${time}秒`;
+    timeCell.textContent = `${time} seconds`;
 
     row.appendChild(resultCell);
     row.appendChild(similarityCell);
     row.appendChild(timeCell);
     face_verificationBody.appendChild(row);
 
-    // 如果通过验证，获取用户 UUID 并显示
+    // If verification passed, get the user's UUID and display it
     if (verified) {
-        const user = getUserFromCookies(); // 假设有这个函数可以从 Cookies 中获取用户信息
+        const user = getUserFromCookies(); // Assuming there's a function to get user information from cookies
         const userId = user ? user.userId : null;
 
         if (userId) {
             const userUUID = await checkUserUUID(userId);
             if (userUUID) {
-                alert(`验证通过！您的 UUID 是: ${userUUID}`);
+                alert(`Verification passed! Your UUID is: ${userUUID}`);
                 showLinks([attendanceLink]);
-                setFaceVerificationStatus(userId, verified)
+                setFaceVerificationStatus(userId, verified);
             } else {
-                alert("验证通过，但未能找到您的 UUID。");
+                alert("Verification passed, but we could not find your UUID.");
             }
         } else {
-            alert("无法获取当前用户信息，请重新登录。");
+            alert("Unable to retrieve current user information, please log in again.");
         }
     }
 }
-// 上传文件名显示
+
+// Display file name
 function updateFileName() {
     const fileInput = document.getElementById("imageUpload");
-    const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "未选择文件 (No file selected)";
+    const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
     document.getElementById("fileName").textContent = fileName;
 }

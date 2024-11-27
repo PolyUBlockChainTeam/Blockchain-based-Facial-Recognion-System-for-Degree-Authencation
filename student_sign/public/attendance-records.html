@@ -14,8 +14,8 @@
         <h2 class="logo">Logo</h2>
         <nav class="navigation">
             <a href="index.html">Home</a>
-            <a href="attendance-register.html" id="attendanceLink">学历上传</a>
-            <a href="attendance-records.html" id="attendanceRecordsLink">学历查询</a>
+            <a href="attendance-register.html" id="attendanceLink">Upload Credentials</a>
+            <a href="attendance-records.html" id="attendanceRecordsLink">Check Credentials</a>
             <a href="face_embedding.html" id="face_embeddingLink">Face Embedding</a>
             <a href="face_verification.html" id="face_verificationLink">Face Verify</a>
             <button class="btnLogin-popup">Login</button>
@@ -92,32 +92,32 @@
 
     <div class="attendance-records-box" id="attendance-recordsBox">
         <section class="attendance-records-header">
-            <h1>学历查询</h1>
+            <h1>Check Credentials</h1>
             
             <div class="attendance-records-inputs">
-                <input type="text" id="attendance-id" placeholder="输入学号" />
+                <input type="text" id="attendance-id" placeholder="Enter Student ID" />
             </div>
             
-            <button class="attendance-records-btn" onclick="queryDegree()">查询</button>
+            <button class="attendance-records-btn" onclick="queryDegree()">Search</button>
         </section>
         
         <section class="shell">
             <table class="attendance-records-table" id="attendance-recordsTable" border="1">
                 <thead>
                     <tr>
-                        <th>学号</th>
-                        <th>学位类型</th>
-                        <th>专业</th>
-                        <th>毕业院校</th>
-                        <th>毕业年份</th>
+                        <th>Student ID</th>
+                        <th>Degree Type</th>
+                        <th>Major</th>
+                        <th>University</th>
+                        <th>Graduation Year</th>
                     </tr>
                 </thead>
                 <tbody id="attendance-recordsBody">
-                    <!-- 签到记录将显示在这里 -->
+                    <!-- Attendance records will be displayed here -->
                 </tbody>
             </table>
         </section>
-    </div>
+    </div>    
     
     <script src="js/cookies.js"></script>
     <script src="js/uuid.js"></script>

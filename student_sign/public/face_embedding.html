@@ -14,8 +14,8 @@
         <h2 class="logo">Logo</h2>
         <nav class="navigation">
             <a href="index.html">Home</a>
-            <a href="attendance-register.html" id="attendanceLink">学历上传</a>
-            <a href="attendance-records.html" id="attendanceRecordsLink">学历查询</a>
+            <a href="attendance-register.html" id="attendanceLink">Upload Credentials</a>
+            <a href="attendance-records.html" id="attendanceRecordsLink">Check Credentials</a>
             <a href="face_embedding.html" id="face_embeddingLink">Face Embedding</a>
             <a href="face_verification.html" id="face_verificationLink">Face Verify</a>
             <button class="btnLogin-popup">Login</button>
@@ -96,24 +96,24 @@
     <div class="face_embedding-box" id="face_embeddingBox">
         <section class="face_embedding-header">
             <h1>Face Embedding Generator</h1>
-            <!-- 上传图片按钮 -->
+            <!-- Upload image button -->
             <div class="face_embedding-inputs">
                 <label for="imageUpload" class="file-upload-btn">Choose File</label>
                 <input type="file" id="imageUpload" accept="image/*" onchange="updateFileName()" />
                 <span id="fileName">No file selected</span>
             </div>
-            <button class="face_embedding-gener-btn" onclick="uploadAndGenerateEmbedding()">生成嵌入 (Generate Embedding)</button>
+            <button class="face_embedding-gener-btn" onclick="uploadAndGenerateEmbedding()">Generate Embedding</button>
         </section>
         <section class="shell">
             <table class="face_embedding-table" id="face_embeddingTable" border="1">
                 <thead>
                     <tr>
-                        <th>人脸置信度 (Face Confidence)</th>
-                        <th>嵌入值 (Embedding Value)</th>
+                        <th>Face Confidence</th>
+                        <th>Embedding Value</th>
                     </tr>
                 </thead>
                 <tbody id="face_embeddingBody">
-                    <!-- 嵌入信息将显示在这里 -->
+                    <!-- Embedding information will be displayed here -->
                 </tbody>
             </table>
         </section>

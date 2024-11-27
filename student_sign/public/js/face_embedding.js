@@ -1,27 +1,27 @@
 async function uploadAndGenerateEmbedding() {
-    const user = getUserFromCookies();  // 获取当前用户
+    const user = getUserFromCookies();  // Get current user
     const userId = user ? user.userId : null;
     
     if (!userId) return;
-    // 老师不能生成
-    if (getUserRole(userId)=='teacher') {
-        alert("You are not student!")
+    // Teachers cannot generate embeddings
+    if (getUserRole(userId) === 'teacher') {
+        alert("You are not a student!");
         return;
     }
 
-    const studentID = userId
+    const studentID = userId;
     const imageInput = document.getElementById("imageUpload");
     const file = imageInput.files[0];
 
     if (!file) {
-        alert("请先选择一张图片！");
+        alert("Please select an image first!");
         return;
     }
 
-    // 将文件转换为 Base64 或其他可序列化的格式
+    // Convert the file to Base64 or another serializable format
     const fileBase64 = await fileToBase64(file);
 
-    // 构造 JSON 数据
+    // Construct the JSON data
     const payload = {
         img: fileBase64,
         model_name: "VGG-Face",
@@ -34,13 +34,13 @@ async function uploadAndGenerateEmbedding() {
         const response = await fetch("http://localhost:5000/represent", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json", // 设置 JSON 请求头
+                "Content-Type": "application/json", // Set JSON request header
             },
             body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
-            throw new Error("API 调用失败！");
+            throw new Error("API call failed!");
         }
 
         const data = await response.json();
@@ -62,47 +62,46 @@ async function uploadAndGenerateEmbedding() {
                 // !!!这里应该是把区块链生成的UUID传到这里!!!
                 const newUUID = await addUserUUID(userId, '11111111111'); // !!!调用生成并绑定 UUID 的函数 这里默认是'11111111111'!!!
                 if (newUUID) {
-                    alert(`成功生成 Embedding，且为用户分配了 UUID：${newUUID}`);
+                    alert(`Successfully generated the embedding, and allocated UUID to the user: ${newUUID}`);
                     const faceEmbeddingLink = document.getElementById("face_embeddingLink");
                     const faceVerificationLink = document.getElementById("face_verificationLink");
                     showLinks([faceVerificationLink]);
                     hideLinks([faceEmbeddingLink]);
                 } else {
-                    alert("生成 Embedding 成功，但未能为用户生成 UUID！");
+                    alert("Successfully generated the embedding, but failed to generate UUID for the user!");
                 }
             } catch (error) {
                 console.error("Error during UUID generation:", error);
-                alert("生成 UUID 时出错，请稍后再试！");
+                alert("An error occurred while generating the UUID, please try again later!");
             }
         } else {
-            alert("未能生成有效的嵌入结果！");
+            alert("Failed to generate a valid embedding result!");
         }
     } catch (error) {
         console.error(error);
-        alert("生成嵌入时出错，请确保Python人脸识别服务器5000已经开启，请检查控制台！");
+        alert("An error occurred while generating the embedding. Please make sure the Python face recognition server on port 5000 is running, and check the console!");
     }
 }
 
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        // reader.onload = () => resolve(reader.result.split(",")[1]); // 去掉 Base64 前缀
-        reader.onload = () => resolve(reader.result); // 不去掉 Base64 前缀
+        // reader.onload = () => resolve(reader.result.split(",")[1]); // Remove Base64 prefix
+        reader.onload = () => resolve(reader.result); // Do not remove Base64 prefix
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
 }
 
-
 function displayEmbedding(faceConfidence, embedding) {
     const face_embeddingBody = document.getElementById("face_embeddingBody");
-    face_embeddingBody.innerHTML = ""; // 清空表格内容
+    face_embeddingBody.innerHTML = ""; // Clear the table contents
 
     embedding.forEach((value) => {
         const row = document.createElement("tr");
 
         const confidenceCell = document.createElement("td");
-        confidenceCell.textContent = faceConfidence.toFixed(2); // 显示置信度保留两位小数
+        confidenceCell.textContent = faceConfidence.toFixed(2); // Display confidence with two decimal places
 
         const valueCell = document.createElement("td");
         valueCell.textContent = value;
@@ -113,7 +112,7 @@ function displayEmbedding(faceConfidence, embedding) {
     });
 }
 
-// 上传文件名显示
+// Display uploaded file name
 function updateFileName() {
     const fileInput = document.getElementById("imageUpload");
     const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";

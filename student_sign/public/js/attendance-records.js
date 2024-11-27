@@ -1,8 +1,8 @@
-// 隐藏标签链接
+// Hide label link
 const faceVerificationLink = document.getElementById("face_verificationLink");
 hideLinks([faceVerificationLink]);
 
-// 你的合约地址和 ABI
+// Your contract address and ABI
 const contractAddress = '0xB581C9264f59BF0289fA76D61B2D0746dCE3C30D';
 const contractABI = [
     {
@@ -41,24 +41,24 @@ let contract;
 let senderAccount;
 
 async function init() {
-    // 检查用户的 Ethereum 提供者
+    // Check user's Ethereum provider
     if (typeof window.ethereum !== 'undefined') {
         web3 = new Web3(window.ethereum);
-        // 请求用户授权
+        // Request user authorization
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         senderAccount = accounts[0];
 
-        // 实例化合约
+        // Instantiate the contract
         contract = new web3.eth.Contract(contractABI, contractAddress);
     } else {
-        console.error("请安装 MetaMask 或其他以太坊钱包");
+        console.error("Please install MetaMask or another Ethereum wallet");
     }
 }
 
 async function queryDegree() {
-    const studentID = document.getElementById("attendance-id").value; // 从输入框获取学生ID
+    const studentID = document.getElementById("attendance-id").value; // Get student ID from input field
     const degreeInfoBody = document.getElementById("attendance-registerBody");
-    degreeInfoBody.innerHTML = ""; // 清空之前的查询结果
+    degreeInfoBody.innerHTML = ""; // Clear previous query results
 
     try {
         const degreeInfo = await contract.methods.getDegree(studentID).call();
@@ -72,10 +72,10 @@ async function queryDegree() {
             </tr>
         `;
     } catch (error) {
-        console.error("查询学位信息时出错:", error);
-        degreeInfoBody.innerHTML = "<tr><td colspan='5'>查询失败,请检查学生ID或合约状态。</td></tr>";
+        console.error("Error querying degree information:", error);
+        degreeInfoBody.innerHTML = "<tr><td colspan='5'>Query failed, please check the student ID or contract status.</td></tr>";
     }
 }
 
-// 初始化合约交互
+// Initialize contract interaction
 init();
