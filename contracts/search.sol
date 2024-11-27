@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-contract DegreeConsensus {
+contract DegreeConsensusWithWeights {
     struct Degree {
         string name; // 学生姓名
         string degreeType; // 学位类型
@@ -19,17 +19,32 @@ contract DegreeConsensus {
         bool finalized; // 是否已达成共识
     }
 
+    address public admin; // 管理员地址
+    mapping(address => uint256) public votingWeights; // 投票权重映射
     mapping(bytes32 => Degree) private degreeRecords; // 学位信息存储映射
     Proposal[] private proposals; // 所有提案
     mapping(uint256 => mapping(address => bool)) private hasVoted; // 防止重复投票
 
     event ProposalCreated(uint256 proposalID, bytes32 studentID, address proposer);
-    event VoteCast(uint256 proposalID, address voter, bool inFavor);
+    event VoteCast(uint256 proposalID, address voter, bool inFavor, uint256 weight);
     event ProposalFinalized(uint256 proposalID, bool accepted);
+    event VotingWeightUpdated(address voter, uint256 weight);
 
-    uint256 public proposalCount = 0;
-    uint256 public votingThreshold = 5; // 第5个提案开始需要投票
-    
+    constructor() {
+        admin = msg.sender; // 部署合约的人为管理员
+    }
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can perform this action");
+        _;
+    }
+
+    // 设置投票权重
+    function setVotingWeight(address voter, uint256 weight) public onlyAdmin {
+        votingWeights[voter] = weight;
+        emit VotingWeightUpdated(voter, weight);
+    }
+
     // 提交一个学位信息提案
     function proposeDegree(
         bytes32 studentID,
@@ -39,7 +54,6 @@ contract DegreeConsensus {
         string memory university,
         uint256 year
     ) public {
-        // 创建一个提案
         Proposal memory newProposal = Proposal({
             studentID: studentID,
             degree: Degree(name, degreeType, major, university, year),
@@ -60,15 +74,21 @@ contract DegreeConsensus {
         require(!proposal.finalized, "Proposal already finalized");
         require(!hasVoted[proposalID][msg.sender], "You have already voted on this proposal");
 
+        // 获取投票者的权重，默认为 1
+        uint256 weight = votingWeights[msg.sender];
+        if (weight == 0) {
+            weight = 1;
+        }
+
         // 记录投票
         hasVoted[proposalID][msg.sender] = true;
         if (inFavor) {
-            proposal.votesFor++;
+            proposal.votesFor += weight; // 根据权重增加赞成票
         } else {
-            proposal.votesAgainst++;
+            proposal.votesAgainst += weight; // 根据权重增加反对票
         }
 
-        emit VoteCast(proposalID, msg.sender, inFavor);
+        emit VoteCast(proposalID, msg.sender, inFavor, weight);
 
         // 检查是否达到共识
         finalizeProposal(proposalID);
