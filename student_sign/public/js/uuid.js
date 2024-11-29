@@ -2,7 +2,7 @@
 async function checkUserUUID(userId) {
     try {
         // 调用后端 API 查询 uuid
-        const response = await fetch(`http://localhost:4000/users/${userId}/uuid`, {
+        const response = await fetch(`http://192.168.191.233:4100/users/${userId}/uuid`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ async function addUserUUID(userId, uuid = null) {
         };
 
         // 调用后端 API 为用户生成或绑定 UUID
-        const response = await fetch(`http://localhost:4000/users/${userId}/uuid`, {
+        const response = await fetch(`http://192.168.191.233:4100/users/${userId}/uuid`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

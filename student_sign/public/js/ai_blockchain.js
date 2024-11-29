@@ -1,5 +1,5 @@
 // 你的合约地址和 ABI
-const contractAddress = '0x42AD3aE0B79Fa253ab732eba8FCF38864Ad4abf0';
+const contractAddress = '0xC469e7aE4aD962c30c7111dc580B4adbc7E914DD';
 const contractABI = [
 	{
 		"inputs": [
@@ -63,7 +63,44 @@ let web3;
 let contract;
 let senderAccount;
 
+/* async function init() {
+    // 检查用户的 Ethereum 提供者
+    if (typeof window.ethereum !== 'undefined') {
+        web3 = new Web3(window.ethereum);
+        // 请求用户授权
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        senderAccount = accounts[0];
 async function init() {
+    try {
+        // 检查是否有 Ethereum 提供者
+        if (typeof window.ethereum !== 'undefined') {
+            console.log("MetaMask detected!");
+
+            // 创建 Web3 实例
+            web3 = new Web3(window.ethereum);
+
+            // 请求用户授权并获取账户
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            senderAccount = accounts[0];
+
+            console.log("Connected account:", senderAccount);
+
+            // 实例化智能合约
+            contract = new web3.eth.Contract(contractABI, contractAddress);
+            console.log("Contract initialized:", contract);
+
+            alert("MetaMask connected successfully!");
+        } else {
+            console.error("请安装 MetaMask 或其他以太坊钱包");
+            alert("MetaMask is not installed! Please install it to proceed.");
+        }
+    } catch (error) {
+        console.error("Error connecting to MetaMask:", error);
+        alert("Failed to connect to MetaMask. Please try again.");
+    }
+} */
+
+	async function init() {
     try {
         // 检查是否有 Ethereum 提供者
         if (typeof window.ethereum !== 'undefined') {

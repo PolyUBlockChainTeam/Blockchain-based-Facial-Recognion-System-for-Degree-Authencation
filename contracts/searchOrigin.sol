@@ -1,5 +1,6 @@
 
 // SPDX-License-Identifier: UNLICENSED
+import "hardhat/console.sol";
 
 pragma solidity ^0.8.0;
 
@@ -48,6 +49,13 @@ contract DegreeSearch {
         emit DegreeProposed(studentID, msg.sender);
     }
 
+    // 查询当前已经投了多少票
+    function getApprovalCount(string memory studentID) public view returns (uint256 approvalCount) {
+        ConsensusProposal storage proposal = proposals[studentID];
+        require(proposal.proposer != address(0), "Proposal does not exist"); // 确保提案存在
+        return proposal.approvalCount; // 返回当前批准数
+    }
+
     // 批准提案
     function approveProposal(string memory studentID) public {
         ConsensusProposal storage proposal = proposals[studentID];
@@ -56,7 +64,10 @@ contract DegreeSearch {
         require(!proposal.executed, "Proposal already executed");
 
         proposal.approvals[msg.sender] = true;
+        console.log("before:", proposal.approvalCount);
         proposal.approvalCount++;
+        console.log("after:", proposal.approvalCount);
+
 
         emit DegreeApproved(studentID, msg.sender);
 
@@ -70,6 +81,7 @@ contract DegreeSearch {
     function _addDegree(string memory studentID, Degree memory degree) internal {
         degreeRecords[studentID] = degree;
         emit DegreeAdded(studentID);
+        console.log("success!!");
     }
 
     // 根据学生ID查询学位信息
