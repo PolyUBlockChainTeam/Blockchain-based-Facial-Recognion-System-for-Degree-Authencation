@@ -4100,6 +4100,12 @@ const attendanceLink = document.getElementById("attendanceLink");
 hideLinks([attendanceLink]);
 
 async function uploadAndVerify() {
+    //根据name取出相应的数组
+    const nameValue = document.getElementById("Name").value; // 获取输入框值
+    setUserUUID(nameValue);//设置name为StudentId
+    const arrayJson = sessionStorage.getItem(nameValue);
+    const storedArray = JSON.parse(arrayJson);
+
     const imageInput = document.getElementById("imageUpload");
 
     const file = imageInput.files[0];
@@ -4118,7 +4124,7 @@ async function uploadAndVerify() {
 
     // 构造 JSON 数据
     const payload = {
-        img1: test_embedding, //!!!这里改为区块链的embedding数组 每个元素应为 float 如果不是Python后台会自动转换，不过应该确保是数组!!!!
+        img1: storedArray, //!!!这里改为了区块链的storedArray
         img2: fileBase64,
         model_name: "VGG-Face",
         detector_backend: "opencv",
@@ -4189,13 +4195,15 @@ async function displayVerificationResult(data) {
         const userId = user ? user.userId : null;
 
         if (userId) {
-            const userUUID = await checkUserUUID(userId);
+            //const userUUID = await checkUserUUID(userId);
+            const userUUID = document.getElementById("UUID").value;
             if (userUUID) {
                 alert(`Verification passed! Your UUID is: ${userUUID}`);
                 showLinks([attendanceLink]);
                 setFaceVerificationStatus(userId, verified);
             } else {
                 alert("Verification passed, but we could not find your UUID.");
+                /* alert("Verification passed."); */
             }
         } else {
             alert("Unable to retrieve current user information, please log in again.");

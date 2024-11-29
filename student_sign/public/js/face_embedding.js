@@ -49,7 +49,14 @@ async function uploadAndGenerateEmbedding() {
             // console.log("result:",result);
             
             // !!!result.embedding 是一个固定长度为 4096 的数组 需要传入区块链!!!
+            // 数组过长不能传入区块链，将数组json化，存入sessionStorage，它的name为随机生成的uuid，将uuid存入区块链
             console.log("result.embedding:",result.embedding);
+            const arrayJson = JSON.stringify(result.embedding);//json化的结果数据
+            console.log("识别结果json:"+arrayJson);
+            const name = uuid.v4();
+            console.log("测试name:"+name);
+            sessionStorage.setItem(name,arrayJson);
+            console.log("测试根据name拿出识别数组:"+JSON.parse(sessionStorage.getItem(name)));
             // 示例：解析并调用 displayEmbedding 函数
             displayEmbedding(result?.face_confidence || 0, result?.embedding || []);
 
@@ -60,7 +67,15 @@ async function uploadAndGenerateEmbedding() {
             // 3. 如果用户已有 UUID，则不会重新生成，而是直接返回已有的 UUID。
             try {
                 // !!!这里应该是把区块链生成的UUID传到这里!!!
-                const newUUID = await addUserUUID(userId, '11111111111'); // !!!调用生成并绑定 UUID 的函数 这里默认是'11111111111'!!!
+                // 这里对name进行一次双重嵌套
+                const newUUID = uuid.v4(); // 再新生成一个UUID和name对应
+                try {
+                    await contract.methods.storeUUIDName(newUUID,name).send({ from: senderAccount });//这里向区块链内部存入数据
+                    console.log("Picture information added with UUID: " + newUUID);
+                } catch (error) {
+                    console.error("Error store information:", error);
+                }
+                
                 if (newUUID) {
                     alert(`Successfully generated the embedding, and allocated UUID to the user: ${newUUID}`);
                     const faceEmbeddingLink = document.getElementById("face_embeddingLink");

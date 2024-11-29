@@ -13,14 +13,21 @@ function setUserCookies(userId, username) {
     setCookie('userId', userId, 0.5);  // 存储 0.5 天
     setCookie('username', username, 0.5);  // 存储 0.5 天
 }
+//设置name为学生studentId
+function setUserUUID(name) {
+    setCookie('studentId',name,0.5);// 存储 0.5 天
+}
 // 获取指定的 Cookie
 function getCookie(name) {
     const nameEq = name + "=";
     const ca = document.cookie.split(';');
+    console.log("Cookies array:", ca); // 输出 cookies 数组
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i].trim();
+        console.log("Current cookie:", c); // 输出当前处理的 cookie
         if (c.indexOf(nameEq) === 0) {
-            return c.substring(nameEq.length, c.length);  // 返回 cookie 值
+            console.log("Cookie found:", c); // 输出找到的 cookie
+            return decodeURIComponent(c.substring(nameEq.length, c.length)); // 返回解码后的 cookie 值
         }
     }
     return null;  // 如果找不到指定的 cookie，返回 null

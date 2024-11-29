@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnLoginPopup.textContent = 'Logout';  // 修改按钮为“Logout”
         // console.log('end:');
         // 检查是否有 UUID
-        const userUUID = await checkUserUUID(user.userId);
+        /* const userUUID = await checkUserUUID(user.userId); */
+        const userUUID = getCookie('studentId');
         if (!userUUID) {
             console.log('no UUID');  // 调试信息
             // 没有 UUID，显示 Face Embedding 并隐藏 Face Verify

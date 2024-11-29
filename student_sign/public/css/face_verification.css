@@ -184,6 +184,20 @@
     flex-direction: column; /* 垂直排列输入框 */
 }
 
+#UUID,#Name {
+    width: 30%; /* 增大宽度，使输入框更加显眼 */
+    padding: 8px 15px; /* 内边距，使文本更易阅读 */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* 半透明边框 */
+    border-radius: 8px; /* 圆角 */
+    background: rgba(255, 255, 255, 0.2); /* 半透明背景 */
+    color: white; /* 字体颜色 */
+    font-size: 1rem; /* 字体大小 */
+    backdrop-filter: blur(10px); /* 背景模糊效果 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影 */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 平滑过渡效果 */
+    outline: none; /* 去除输入框的默认外边框 */
+}
+
 #face_verificationPassword {
     width: 50%; /* 增大宽度，使输入框更加显眼 */
     padding: 8px 15px; /* 内边距，使文本更易阅读 */

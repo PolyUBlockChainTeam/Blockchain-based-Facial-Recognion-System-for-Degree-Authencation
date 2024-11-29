@@ -91,9 +91,31 @@
     </div>
 
 
-
-
     <div class="face_verification-box" id="face_verificationBox">
+        <!-- 查询name界面 -->
+        <section class="face_verification-header">
+            <h1>Check Name</h1>
+            
+            <div class="face_verification-inputs">
+                <input type="text" id="UUID" placeholder="Enter UUID" />
+            </div>
+            
+            <button class="face_verification-gener-btn" onclick="getNameByUUID()">Search</button>
+        </section>
+        
+        <section class="shell">
+            <table class="face_verification-table" id="face_verification_getName" border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody id="face_verificationBody0">
+                    <!-- Attendance records will be displayed here -->
+                </tbody>
+            </table>
+        </section>
+
         <section class="face_verification-header">
             <h1>Face Verification</h1>
             <!-- Upload image button -->
@@ -101,6 +123,9 @@
                 <label for="imageUpload" class="file-upload-btn">Choose File</label>
                 <input type="file" id="imageUpload" accept="image/*" onchange="updateFileName()" />
                 <span id="fileName">No file selected</span>
+            </div>
+            <div class="face_verification-inputs">
+                <input type="text" id="Name" placeholder="Enter Name" />
             </div>
             <button class="face_verification-gener-btn" onclick="uploadAndVerify()">Verify Faces</button>
         </section>
@@ -120,12 +145,13 @@
         </section>
     </div>    
 
-    
     <script src="js/cookies.js"></script>
     <script src="js/uuid.js"></script>
     <script src="script.js"></script>
     <script src="js/face_verification.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="js/ai_blockchain.js"></script>
 </body>
 </html>
