@@ -43,7 +43,7 @@
 }
 
 /* 按钮样式 */
-.attendance-records-btn {
+.attendance-records-btn, .attendance-vote-btn {
     padding: 10px 20px; /* 按钮内边距 */
     border: none; /* 去掉默认边框 */
     border-radius: 5px; /* 按钮圆角 */
@@ -57,12 +57,12 @@
 }
 
 /* 按钮悬停和点击效果 */
-.attendance-records-btn:hover {
+.attendance-records-btn:hover, .attendance-vote-btn:hover{
     background: rgba(0, 123, 255, 1); /* 悬停时不透明背景 */
     transform: scale(1.05); /* 悬停时放大效果 */
 }
 
-.attendance-records-btn:active {
+.attendance-records-btn:active, .attendance-vote-btn:active{
     background: rgba(0, 100, 200, 1); /* 点击时颜色稍深 */
     transform: scale(0.95); /* 点击时缩小效果 */
 }
