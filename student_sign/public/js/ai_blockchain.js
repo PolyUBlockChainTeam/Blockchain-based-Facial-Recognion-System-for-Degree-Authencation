@@ -1,43 +1,43 @@
 // 你的合约地址和 ABI
 const contractAddress = '0x42AD3aE0B79Fa253ab732eba8FCF38864Ad4abf0';
 const contractABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "storeUUIDName",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "UUIDNameStored",
-		"type": "event"
-	},
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "uuid",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "faceEmbeddingUUID", // Updated name
+                "type": "string"
+            }
+        ],
+        "name": "storeUUIDName",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "uuid",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "faceEmbeddingUUID", // Updated name
+                "type": "string"
+            }
+        ],
+        "name": "UUIDNameStored",
+        "type": "event"
+    },
 	{
 		"inputs": [
 			{
@@ -93,7 +93,6 @@ async function init() {
     }
 }
 
-
 async function getNameByUUID() {
     const uuid = document.getElementById("UUID").value; // 从输入框获取 UUID
     const nameInfoBody = document.getElementById("face_verificationBody0");
@@ -105,9 +104,9 @@ async function getNameByUUID() {
         // 调用合约函数获取名称
         //const name = await contract.methods.getNameByUUID(uuid).call();  
 
-		const name = await contract.methods.getNameByUUID(uuid).call();  
-        
-        console.log("Returned name:", name); // 调试输出
+		// change name variable to faceEmbedding
+	    const faceEmbedding = await contract.methods.getNameByUUID(uuid).call();  
+        console.log("Returned faceEmbedding:", faceEmbedding);
 
         if (name && typeof name === 'string' && name.length > 0) {
             // 确保返回的名称为有效的字符串
@@ -125,8 +124,6 @@ async function getNameByUUID() {
         nameInfoBody.innerHTML = "<tr><td colspan='5'>Query failed, please check the UUID or contract status.</td></tr>";
     }
 }
-
-
 
 // 初始化合约交互
 init();

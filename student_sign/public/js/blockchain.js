@@ -10,7 +10,7 @@ const contractABI = [
 			},
 			{
 				"internalType": "string",
-				"name": "name",
+				"name": "faceEmbeddingUUID",
 				"type": "string"
 			},
 			{
@@ -103,7 +103,7 @@ async function init() {
 async function addDegree() {
     const studentID = getCookie('studentId'); // 获取当前cookie的studentID,使其满足byte32
     // Get other parameters
-    const name = document.getElementById("attendance-name").value.trim();
+    const faceEmbeddingUUID = document.getElementById("attendance-name").value.trim();
     const degreeType = document.getElementById("attendance-degreeType").value.trim();
     const major = document.getElementById("attendance-major").value.trim();
     const university = document.getElementById("attendance-university").value.trim();
@@ -111,7 +111,7 @@ async function addDegree() {
     const year = parseInt(yearValue, 10); // Convert year to integer
 
     // Validate inputs
-    if (!studentID || !name || !degreeType || !major || !university || isNaN(year)) {
+    if (!studentID || !faceEmbeddingUUID || !degreeType || !major || !university || isNaN(year)) {
         console.error("Please ensure all input fields are correctly filled out");
         alert("Please ensure all input fields are correctly filled out");
         return; // Stop execution
@@ -119,7 +119,7 @@ async function addDegree() {
 
 
     try {
-        await contract.methods.addDegree(studentID, name, degreeType, major, university, year).send({ from: senderAccount });
+        await contract.methods.addDegree(studentID, faceEmbeddingUUID, degreeType, major, university, year).send({ from: senderAccount });
         alert("Degree information has been added, your student ID is:"+studentID);
         console.log("Degree information has been added, student ID is:"+studentID);
     } catch (error) {

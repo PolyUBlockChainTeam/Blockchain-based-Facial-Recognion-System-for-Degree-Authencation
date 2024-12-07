@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract DegreeConsensusWithWeights {
     struct Degree {
-        string name; // 学生姓名
+        string faceEmbeddingUUID; // Associated face embedding
         string degreeType; // 学位类型
         string major; // 专业
         string university; // 毕业院校
@@ -48,7 +48,7 @@ contract DegreeConsensusWithWeights {
     // 提交一个学位信息提案
     function proposeDegree(
         bytes32 studentID,
-        string memory name,
+        string memory faceEmbeddingUUID,
         string memory degreeType,
         string memory major,
         string memory university,
@@ -56,7 +56,7 @@ contract DegreeConsensusWithWeights {
     ) public {
         Proposal memory newProposal = Proposal({
             studentID: studentID,
-            degree: Degree(name, degreeType, major, university, year),
+            degree: Degree(faceEmbeddingUUID, degreeType, major, university, year),
             proposer: msg.sender,
             votesFor: 0,
             votesAgainst: 0,
@@ -116,14 +116,14 @@ contract DegreeConsensusWithWeights {
     // 查询学位信息
     function getDegree(bytes32 studentID) public view returns (string memory, string memory, string memory, string memory, uint256) {
         Degree memory degree = degreeRecords[studentID];
-        require(bytes(degree.name).length > 0, "Degree not found");
-        return (degree.name, degree.degreeType, degree.major, degree.university, degree.graduationYear);
+        require(bytes(degree.faceEmbeddingUUID).length > 0, "Degree not found");
+        return (degree.faceEmbeddingUUID, degree.degreeType, degree.major, degree.university, degree.graduationYear);
     }
 
     // 查看提案状态
     function getProposal(uint256 proposalID) public view returns (
         bytes32 studentID,
-        string memory name,
+        string memory faceEmbeddingUUID,
         string memory degreeType,
         string memory major,
         string memory university,
@@ -137,7 +137,7 @@ contract DegreeConsensusWithWeights {
         Proposal memory proposal = proposals[proposalID];
         return (
             proposal.studentID,
-            proposal.degree.name,
+            proposal.degree.faceEmbeddingUUID,
             proposal.degree.degreeType,
             proposal.degree.major,
             proposal.degree.university,

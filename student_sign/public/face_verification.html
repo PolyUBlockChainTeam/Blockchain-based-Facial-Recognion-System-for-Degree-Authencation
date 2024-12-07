@@ -107,13 +107,13 @@
             <table class="face_verification-table" id="face_verification_getName" border="1">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Face Embedding UUID</th> <!-- Updated header -->
                     </tr>
                 </thead>
                 <tbody id="face_verificationBody0">
                     <!-- Attendance records will be displayed here -->
                 </tbody>
-            </table>
+            </table>            
         </section>
 
         <section class="face_verification-header">
@@ -125,10 +125,11 @@
                 <span id="fileName">No file selected</span>
             </div>
             <div class="face_verification-inputs">
-                <input type="text" id="Name" placeholder="Enter Name" />
+                <input type="text" id="userFaceEmbeddingUUID" placeholder="Enter Face Embedding UUID" /> <!-- Updated label -->
             </div>
             <button class="face_verification-gener-btn" onclick="uploadAndVerify()">Verify Faces</button>
         </section>
+        
         <section class="shell">
             <table class="face_verification-table" id="face_verificationTable" border="1">
                 <thead>

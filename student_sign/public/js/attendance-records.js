@@ -63,7 +63,7 @@ const contractABI = [
             },
             {
                 "internalType": "string",
-                "name": "name",
+                "name": "faceEmbeddingUUID", // Updated from name
                 "type": "string"
             },
             {
@@ -247,7 +247,7 @@ const contractABI = [
             },
             {
                 "internalType": "string",
-                "name": "name",
+                "name": "faceEmbeddingUUID", // Updated from name
                 "type": "string"
             },
             {

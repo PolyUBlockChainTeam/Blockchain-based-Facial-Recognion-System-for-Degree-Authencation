@@ -26,32 +26,32 @@
 **记录验证历史**：<br>
 每次验证请求都会记录操作时间及发起者的地址（作为交易的一部分，保存在区块链中）。<br>
 ### 2. 部署智能合约
-使用 Remix IDE 或 Hardhat 部署智能合约到以太坊测试网络（如 Goerli 或 Sepolia）。<br>
+使用 Remix IDE 部署智能合约到本地测试网络（Hardhat）。<br>
 部署完成后记录智能合约地址供系统调用。<br>
 ### 3. 后端接口
-使用 Web3.js 或 Ethers.js 开发后端服务，通过智能合约与以太坊交互，为前端和用户提供接口：<br>
+使用 Web3.js 开发后端服务，通过智能合约与以太坊交互，为前端和用户提供接口：<br>
 写入学位数据和人脸编码。<br>
 验证学位信息和身份。<br>
 获取验证历史记录。<br>
 
 **数据存储设计**<br>
-学位信息与人脸编码通过智能合约存储在区块链上，结构如下：<br>
+学位信息与人脸编码UUID通过智能合约存储在区块链上，结构如下：<br>
 ```solidity
 struct Degree {
-    string studentId;           // 学生学号
-    string degree;              // 学位信息
-    string university;          // 授予机构
-    string issuedDate;          // 颁发日期
-    string faceEmbedding;       // 人脸特征向量编码
+    string faceEmbeddingUUID;
+    string degreeType; 
+    string major; 
+    string university; 
+    uint256 graduationYear; 
 }
-mapping(string => Degree) private degrees;
+mapping(bytes32 => Degree) private degreeRecords; // Degree information mapping
 ```
 
 **使用方式**：<br>
 #### 1. 部署智能合约
 
-配置 Hardhat 或 Remix IDE。<br>
-连接测试网络（如 Goerli 或 Sepolia）。<br>
+配置 Remix IDE。<br>
+连接到本地测试网络（Hardhat）。<br>
 编译并部署智能合约，记录生成的合约地址。<br>
 #### 2. 后端与智能合约交互<br>
 
@@ -62,7 +62,7 @@ mapping(string => Degree) private degrees;
 **身份验证与学位核查**：<br>
 
 用户提供学生 ID，系统从区块链中提取对应的学位信息及人脸信息编码。<br>
-前端通过人脸识别（对比实时摄像头图像和区块链存储的编码）验证用户身份。<br>
+前端通过人脸识别（对比图像和区块链存储的编码）验证用户身份。<br>
 **验证历史记录**：<br>
 
 每次验证请求自动记录在区块链中，确保全程透明。<br>
@@ -79,7 +79,7 @@ node student_sign/server.js
 ```
 
 **访问地址**：
-http://localhost:4000
+http://localhost:4100
 
 **功能**：
 
@@ -87,120 +87,6 @@ http://localhost:4000
 2. 管理用户账号的后端逻辑
 3. 与区块链服务器交互
 
-###  UUID 管理
-
-UUID.js文件里面包含以下函数：
-
-### 1. 检查用户是否有 UUID
-
-```javascript
-// 定义异步函数：检查用户是否有 UUID
-async function checkUserUUID(userId) {
-    try {
-        // 调用后端 API 查询 uuid
-        const response = await fetch(`http://localhost:4000/users/${userId}/uuid`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        // 如果用户不存在（状态码 404），抛出异常
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('User not found.');
-            } else {
-                throw new Error('Failed to fetch UUID.');
-            }
-        }
-
-        // 如果状态码是 200，解析 JSON 数据
-        const data = await response.json();
-        return data.uuid; // 返回的是 UUID 值或 null
-    } catch (error) {
-        console.error('Error in checkUserUUID:', error);
-        return null;
-    }
-}
-```
-
-### 2. 为用户生成并绑定 UUID
-
-```javascript
-// 定义异步函数：为用户生成并绑定 UUID
-async function addUserUUID(userId, uuid = null) {
-    try {
-        // 构造请求体，包括可能传入的自定义 UUID
-        const payload = {
-            uuid: uuid, // 如果 uuid 为 null，则发送空值，后端处理自动生成逻辑
-        };
-
-        // 调用后端 API 为用户生成或绑定 UUID
-        const response = await fetch(`http://localhost:4000/users/${userId}/uuid`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload), // 将请求体序列化为 JSON 格式
-        });
-
-        // 检查响应状态
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to add UUID.');
-        }
-
-        // 如果生成或绑定成功，返回 UUID 值
-        const data = await response.json();
-        return data.uuid; // 返回的是 UUID
-    } catch (error) {
-        console.error('Error in addUserUUID:', error);
-        return null; // 返回 null 表示失败
-    }
-}
-```
-
-### 3. 使用示例
-
-```javascript
-// 检查用户是否有 UUID
-let userUUID = await checkUserUUID(userId); // 使用前面的检查函数
-if (!userUUID) {
-    alert('You do not have a UUID yet.');
-    // 如果 UUID 为 null，直接跳转到 face_embedding.html
-    window.location.href = '/face_embedding.html';
-    // window.location.assign('/face_embedding.html');
-} else {
-    alert(`Your UUID is: ${userUUID}`);
-    // 根据需要刷新页面
-    window.location.reload();
-}
-```
-```javascript
-// console.log("result:",result);
-            
-// result.embedding 是一个固定长度为 4096 的数组 需要传入区块链
-console.log("result.embedding:",result.embedding);
-// 示例：解析并调用 displayEmbedding 函数
-displayEmbedding(result?.face_confidence || 0, result?.embedding || []);
-
-// 当玩家 Embedding 成功生成后，自动添加 UUID 或绑定现有的 UUID
-// 调用 addUserUUID(userId, uuid) ：
-// 1. 如果传入的 uuid 为 null，自动为用户生成随机 UUID 并绑定。
-// 2. 如果传入的 uuid 不为空，则绑定该值到用户（作为用户的 UUID）。
-// 3. 如果用户已有 UUID，则不会重新生成，而是直接返回已有的 UUID。
-try {
-    const newUUID = await addUserUUID(userId, '11111111111'); // 调用生成并绑定 UUID 的函数 这里默认是'11111111111'
-    if (newUUID) {
-        alert(`成功生成 Embedding，且为用户分配了 UUID：${newUUID}`);
-    } else {
-        alert("生成 Embedding 成功，但未能为用户生成 UUID！");
-    }
-} catch (error) {
-    console.error("Error during UUID generation:", error);
-    alert("生成 UUID 时出错，请稍后再试！");
-}
-```
 
 ## 3. 代码管理与协作
 

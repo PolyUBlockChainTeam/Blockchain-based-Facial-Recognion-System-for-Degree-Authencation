@@ -1,15 +1,15 @@
-
 // SPDX-License-Identifier: UNLICENSED
+import "hardhat/console.sol";
 
 pragma solidity ^0.8.0;
 
 contract DegreeSearch {
     struct Degree {
-        string name;           // 学生姓名
-        string degreeType;     // 学位类型
-        string major;          // 专业
-        string university;     // 毕业院校
-        uint256 graduationYear; // 毕业年份
+        string faceEmbeddingUUID; // Changed from "name" to "faceEmbeddingUUID" for clarity
+        string degreeType; 
+        string major; 
+        string university; 
+        uint256 graduationYear; 
     }
 
     struct ConsensusProposal {
@@ -20,18 +20,17 @@ contract DegreeSearch {
         bool executed;
     }
 
-    mapping(string => Degree) private degreeRecords; // 学位信息存储映射
-    mapping(string => ConsensusProposal) private proposals; // 学位信息提案存储
-    uint256 public requiredApprovals = 3; // 所需的最小批准数
+    mapping(string => Degree) private degreeRecords;
+    mapping(string => ConsensusProposal) private proposals;
+    uint256 public requiredApprovals = 3;
 
     event DegreeProposed(string indexed studentID, address indexed proposer);
     event DegreeApproved(string indexed studentID, address indexed approver);
     event DegreeAdded(string indexed studentID);
 
-    // 提议添加学位信息
     function proposeDegree(
         string memory studentID,
-        string memory name,
+        string memory faceEmbeddingUUID, // Updated parameter name
         string memory degreeType,
         string memory major,
         string memory university,
@@ -40,7 +39,7 @@ contract DegreeSearch {
         require(proposals[studentID].proposer == address(0), "Proposal already exists");
 
         ConsensusProposal storage newProposal = proposals[studentID];
-        newProposal.proposedDegree = Degree(name, degreeType, major, university, year);
+        newProposal.proposedDegree = Degree(faceEmbeddingUUID, degreeType, major, university, year);
         newProposal.proposer = msg.sender;
         newProposal.approvalCount = 0;
         newProposal.executed = false;
@@ -48,7 +47,12 @@ contract DegreeSearch {
         emit DegreeProposed(studentID, msg.sender);
     }
 
-    // 批准提案
+    function getApprovalCount(string memory studentID) public view returns (uint256 approvalCount) {
+        ConsensusProposal storage proposal = proposals[studentID];
+        require(proposal.proposer != address(0), "Proposal does not exist");
+        return proposal.approvalCount;
+    }
+
     function approveProposal(string memory studentID) public {
         ConsensusProposal storage proposal = proposals[studentID];
         require(proposal.proposer != address(0), "Proposal does not exist");
@@ -56,7 +60,9 @@ contract DegreeSearch {
         require(!proposal.executed, "Proposal already executed");
 
         proposal.approvals[msg.sender] = true;
+        console.log("before:", proposal.approvalCount);
         proposal.approvalCount++;
+        console.log("after:", proposal.approvalCount);
 
         emit DegreeApproved(studentID, msg.sender);
 
@@ -66,13 +72,12 @@ contract DegreeSearch {
         }
     }
 
-    // 内部函数，添加学位信息
     function _addDegree(string memory studentID, Degree memory degree) internal {
         degreeRecords[studentID] = degree;
         emit DegreeAdded(studentID);
+        console.log("success!!");
     }
 
-    // 根据学生ID查询学位信息
     function getDegree(string memory studentID)
         public
         view
@@ -86,7 +91,7 @@ contract DegreeSearch {
     {
         Degree memory degree = degreeRecords[studentID];
         return (
-            degree.name,
+            degree.faceEmbeddingUUID,
             degree.degreeType,
             degree.major,
             degree.university,

@@ -184,7 +184,7 @@
     flex-direction: column; /* 垂直排列输入框 */
 }
 
-#UUID,#Name {
+#UUID,#userFaceEmbeddingUUID {
     width: 30%; /* 增大宽度，使输入框更加显眼 */
     padding: 8px 15px; /* 内边距，使文本更易阅读 */
     border: 1px solid rgba(255, 255, 255, 0.5); /* 半透明边框 */

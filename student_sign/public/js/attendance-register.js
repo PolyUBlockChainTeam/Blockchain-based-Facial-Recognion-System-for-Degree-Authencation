@@ -63,7 +63,7 @@ const contractABI = [
             },
             {
                 "internalType": "string",
-                "name": "name",
+                "name": "faceEmbeddingUUID", // Updated from name
                 "type": "string"
             },
             {
@@ -247,7 +247,7 @@ const contractABI = [
             },
             {
                 "internalType": "string",
-                "name": "name",
+                "name": "faceEmbeddingUUID", // Updated from name
                 "type": "string"
             },
             {
@@ -338,7 +338,7 @@ async function addDegree() {
     const studentIDInput = uuid.v4(); // Generate student ID as UUID
     const studentID = web3.utils.sha3(studentIDInput); // Calculate hash of student ID
     // Get other parameters
-    const name = document.getElementById("attendance-name").value.trim();
+    const faceEmbeddingUUID = document.getElementById("attendance-name").value.trim(); // changed from name
     const degreeType = document.getElementById("attendance-degreeType").value.trim();
     const major = document.getElementById("attendance-major").value.trim();
     const university = document.getElementById("attendance-university").value.trim();
@@ -354,7 +354,7 @@ async function addDegree() {
 
     try {
         // Call the smart contract function
-        await contract.methods.addDegree(studentID, name, degreeType, major, university, year).send({ from: senderAccount });
+        await contract.methods.addDegree(studentID, faceEmbeddingUUID, degreeType, major, university, year).send({ from: senderAccount });
         console.log("Degree information added with student ID: " + studentID);
         alert("Your student ID (also printed in the console) is: " + studentID + ". Please remember it.");
     } catch (error) {
