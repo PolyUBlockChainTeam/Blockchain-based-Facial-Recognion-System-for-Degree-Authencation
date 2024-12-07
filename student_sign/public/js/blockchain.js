@@ -1,6 +1,70 @@
 // 你的合约地址和 ABI
-const contractAddress = '0xB9dfCb4d6A8ff7be25C082380DE931A1f7F9c01c';
+const contractAddress = '0x322619fcCcc741880ee7071cBE4e877Fb919eCf8';
 const contractABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "studentID",
+				"type": "string"
+			}
+		],
+		"name": "approveProposal",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "studentID",
+				"type": "string"
+			}
+		],
+		"name": "DegreeAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "studentID",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "approver",
+				"type": "address"
+			}
+		],
+		"name": "DegreeApproved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "studentID",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "proposer",
+				"type": "address"
+			}
+		],
+		"name": "DegreeProposed",
+		"type": "event"
+	},
 	{
 		"inputs": [
 			{
@@ -34,9 +98,28 @@ const contractABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "addDegree",
+		"name": "proposeDegree",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "studentID",
+				"type": "string"
+			}
+		],
+		"name": "getApprovalCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "approvalCount",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -77,6 +160,19 @@ const contractABI = [
 		],
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "requiredApprovals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	}
 ];
 
@@ -100,7 +196,7 @@ async function init() {
 }
 
 //上传学位
-async function addDegree() {
+async function proposeDegree() {
     const studentID = getCookie('studentId'); // 获取当前cookie的studentID,使其满足byte32
     // Get other parameters
     const faceEmbeddingUUID = document.getElementById("attendance-name").value.trim();
@@ -150,7 +246,32 @@ async function queryDegree() {
     }
 }
 
-//上传图片
+//投票
+async function approveProposal() {
+	const studentID = document.getElementById("vote-id").value; // 从输入框获取学生ID
+
+	//首先，根据studentId，在区块链中获取当前票数
+	let approvalCount = await contract.methods.getApprovalCount(studentID).call();
+	approvalCount = BigInt(approvalCount);
+	if (approvalCount + 1n > 3n) { // 使用 BigInt 进行运算 
+		alert("Three votes have been reached, no more votes are allowed!"); 
+		return; 
+	}
+
+	//说明还未达三票
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    senderAccount = accounts[0];
+
+    try {
+        const receipt = await contract.methods.approveProposal(studentID).send({ from: senderAccount });
+        console.log("Voting successful!", receipt);
+		approvalCount++;
+		alert("current voting number is:"+approvalCount);
+    } catch (error) {
+        console.error("Error during Voting:", error);
+    }
+    
+}
 
 // 初始化合约交互
 init();

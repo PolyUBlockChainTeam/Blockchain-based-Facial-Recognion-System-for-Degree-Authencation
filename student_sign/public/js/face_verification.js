@@ -31,7 +31,7 @@ async function uploadAndVerify() {
     };
 
     try {
-        const response = await fetch("http://localhost:5000/verify", {
+        const response = await fetch("http://192.168.191.233:5000/verify", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json", // Set JSON request header

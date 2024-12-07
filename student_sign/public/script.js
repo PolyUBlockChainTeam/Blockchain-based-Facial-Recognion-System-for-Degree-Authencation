@@ -136,7 +136,7 @@ registerForm.addEventListener('submit', function (e) {
     };
 
     // 使用 fetch 提交请求
-    fetch('http://localhost:4000/users', {
+    fetch('http://192.168.191.233:4100/users', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ loginForm.addEventListener('submit', async function (e) {
     };
 
     // 使用 fetch 提交登录请求
-    fetch('http://localhost:4000/login', {
+    fetch('http://192.168.191.233:4100/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
